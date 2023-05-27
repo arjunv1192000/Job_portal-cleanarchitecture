@@ -1,8 +1,7 @@
 import React from 'react'
-import { Box, Stack, Grid,Typography } from '@mui/material'
+import { Box, Stack, Grid, Typography } from '@mui/material'
 import Header from '../components/Header';
 import SideBar from '../components/SideBar';
-import Search from '../components/Search';
 import Rightbar from '../components/Rightbar';
 import Jobpost from '../components/Jobpost';
 import Footer from '../components/Footer'
@@ -24,7 +23,8 @@ function Landingpage() {
                         <Stack direction={'row'} sx={{ marginTop: 10, marginLeft: 3 }} spacing={1}>
 
                             <SideBar />
-                            <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{padding:1,}} >
+                            <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ padding: 1, }} >
+                                <Jobpost />
                                 <Jobpost />
                                 <Jobpost />
                                 <Jobpost />

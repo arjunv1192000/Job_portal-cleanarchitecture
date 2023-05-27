@@ -19,7 +19,10 @@
     "material-kit-react": "^1.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.11.2",
+    "react-social-login-buttons": "^3.9.1",
+    "reactjs-social-login": "^2.6.2",
     "yup": "^1.1.1"
   },
   "devDependencies": {

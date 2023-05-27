@@ -20,7 +20,7 @@ function SideBar() {
           <Avatar
             alt=""
             src="/static/images/avatar/1.jpg"
-            sx={{ width: 80, height: 80, marginTop: 4, marginLeft: 13 }}
+            sx={{ width: 80, height: 80,marginTop:-3,mx:'auto'}}
           />
           <Typography textAlign={'center'} marginTop={1} fontSize={16} fontWeight={500}>
             ARJUN V

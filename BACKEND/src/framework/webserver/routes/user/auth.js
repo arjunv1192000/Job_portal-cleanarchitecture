@@ -10,7 +10,10 @@ const authRouter=(express)=>{
     const router=express.Router()
     const controller=authController(userAuthRepositoryInt,userAuthRepositoryImp,authServiceInterface,authServiceImp)
 
-    router.route('/').post(controller.createuser)
+    router.route('/signup').post(controller.createuser)
+    router.route('/googlesignup').post(controller.createuserbygoogle)
+    router.route('/login').post(controller.userlogin)
+    router.route('/googlelogin').post(controller.userloginbygoogle)
 
     return router;
 

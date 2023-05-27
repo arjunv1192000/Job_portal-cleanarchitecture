@@ -9,17 +9,79 @@ import GoogleIcon from '@mui/icons-material/Google';
 import { Stack } from "@mui/material";
 import Divider from '@mui/material/Divider';
 import { useNavigate } from "react-router-dom";
+import { useFormik } from 'formik';
+import axios from "../../axios/axios";
+import validationSchema from "./validation/Loginvalidation";
+import toast, { Toaster } from 'react-hot-toast';
+import { LoginSocialGoogle } from 'reactjs-social-login';
+
+
+type googleinfo = {
+    provider: string,
+    data: any
+}
+
+interface FormValues {
+    email: string;
+    password: string;
+
+
+}
+
 
 export default function SignIn() {
-    //   const handleSubmit = (event) => {
-    //     event.preventDefault();
-    //     const data = new FormData(event.currentTarget);
-    //     console.log({
-    //       email: data.get("email"),
-    //       password: data.get("password"),
-    //     });
-    //   };
-    const navigate=useNavigate() ;
+
+
+
+    const navigate = useNavigate();
+
+    const formik = useFormik({
+        initialValues: {
+
+            email: '',
+            password: '',
+
+
+        } as FormValues,
+        validationSchema: validationSchema,
+        onSubmit: (values) => {
+            console.log(values);
+
+
+
+            const body = {
+
+                email: values.email,
+                password: values.password,
+
+            };
+            console.log(body);
+
+            axios.post("/api/v1/user/login", body).then((response) => {
+                console.log(response);
+
+                if (response.data.status == true) {
+
+                    navigate("/")
+
+                } else {
+                    toast.error("Invalid email or password")
+
+
+                }
+
+
+            }).catch((response) => {
+                console.error(response.message);
+
+                navigate("/user/login")
+
+            })
+
+        },
+
+    });
+
 
     return (
         <Container component="main" maxWidth="md"   >
@@ -42,18 +104,64 @@ export default function SignIn() {
                     alt=""
                     src="https://jobbox-nextjs-v3.vercel.app/assets/imgs/page/login-register/img-4.svg"
                 />
-                <Typography component="h1" variant="h5" sx={{ fontSize: 12, fontWeight: 500,color:"blue",marginBottom:4 }}>
+                <Typography component="h1" variant="h5" sx={{ fontSize: 12, fontWeight: 500, color: "blue", marginBottom: 4 }}>
                     Welcome back!
                 </Typography>
                 <Typography component="h1" variant="h5" sx={{ fontSize: 24, fontWeight: 1000 }}>
                     Member login
                 </Typography>
-                <Button variant="outlined" startIcon={<GoogleIcon />} sx={{ mt: 3, mb: 2, height: 50, width: "40%", color: "black", outlineColor: "black" }} >
-                    Login  With Google
-                </Button>
-              
+                <LoginSocialGoogle
+                    client_id={"18104366941-i704jcmbs4sg1926l716a85iqogl0se2.apps.googleusercontent.com"}
+                    scope="openid profile email"
+                    discoveryDocs="claims_supported"
+                    access_type="offline"
+                    onResolve={({ provider, data }: googleinfo) => {
+
+
+                        const body = {
+                           
+                            email: data.email
+                        }
+                        console.log(body,"sssssssssssssssssssssssssssss");
+
+
+                        axios.post('/api/v1/user/googlelogin', body).then((response) => {
+                            console.log(("data poyiii"));
+
+                            if (response.data.status === true) {
+                                navigate('/')
+                            } else {
+                                toast.error("Invalid email or password")
+                              
+
+                              
+
+                            }
+
+                        }).catch((response) => {
+                            console.error(response.message);
+
+                        })
+
+
+
+
+                    }}
+                    onReject={(err: any) => {
+                        console.log(err);
+                    }}
+                >
+                    <Button variant="outlined" startIcon={<GoogleIcon />} sx={{ mt: 3, mb: 2, height: 50, width: "100%", color: "black", outlineColor: "black" }} >
+                        Login  With Google
+                    </Button>
+
+
+                </LoginSocialGoogle>
+
+
+
                 <Divider >Or Continue with</Divider>
-                <Box component="form" noValidate sx={{paddingLeft:20}}>
+                <Box component="form" noValidate onSubmit={formik.handleSubmit} sx={{ paddingLeft: 20 }}>
                     <TextField
                         margin="normal"
                         required
@@ -63,7 +171,11 @@ export default function SignIn() {
                         name="email"
                         autoComplete="email"
                         autoFocus
-                        sx={{width:"70%"}}
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
+                        error={formik.touched.email && Boolean(formik.errors.email)}
+                        helperText={formik.touched.email && formik.errors.email}
+                        sx={{ width: "70%" }}
                     />
 
                     <TextField
@@ -75,10 +187,14 @@ export default function SignIn() {
                         type="password"
                         id="password"
                         autoComplete="current-password"
-                        sx={{width:"70%"}}
+                        value={formik.values.password}
+                        onChange={formik.handleChange}
+                        error={formik.touched.password && Boolean(formik.errors.password)}
+                        helperText={formik.touched.password && formik.errors.password}
+                        sx={{ width: "70%" }}
                     />
 
-                    <Button type="submit" fullWidth variant="contained" sx={{ mt: 5, mb: 2, height: 60, width:"70%", backgroundColor: '#131392' }}  onClick={() => navigate('/')}>
+                    <Button type="submit" fullWidth variant="contained" sx={{ mt: 5, mb: 2, height: 60, width: "70%", backgroundColor: '#131392' }}  >
                         Login
                     </Button>
                     <Grid container justifyContent="space-around"
@@ -101,6 +217,10 @@ export default function SignIn() {
                 }}
                 alt=""
                 src="https://jobbox-nextjs-v3.vercel.app/assets/imgs/page/login-register/img-3.svg"
+            />
+            <Toaster
+                position="top-center"
+                reverseOrder={false}
             />
 
         </Container>

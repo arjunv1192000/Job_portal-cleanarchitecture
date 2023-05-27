@@ -39,7 +39,7 @@ function Jobpostdetails() {
                     <Stack direction={'row'} >
                         <Box sx={{ width: "70%", height: 400, borderRadius: 2, marginLeft: 1, marginTop: 1, backgroundColor: 'white', boxShadow: 6 }}>
                             <Typography variant="h6" margin={2}>Employment Information</Typography>
-                           
+
                             <Stack >
                                 <Stack direction={'row'}>
                                     <Typography marginLeft={3} marginTop={4} fontSize={21} fontWeight={500} color={'black'}>
@@ -68,7 +68,7 @@ function Jobpostdetails() {
                                 </Stack>
                                 <Stack direction={'row'}>
                                     <Typography marginLeft={3} marginTop={4} fontSize={21} fontWeight={500} color={'black'}>
-                                    Update:
+                                        Update:
                                     </Typography >
                                     <Typography marginTop={4} fontSize={21} fontWeight={500} color={"#3C6FF5"} > 10/07/2023</Typography>
 
@@ -130,9 +130,9 @@ function Jobpostdetails() {
 
                     </Typography>
 
-                    <Button variant="contained" sx={{ width: 100, height: 40, borderRadius: 2, marginTop: 5, backgroundColor: "#3C6FF5", marginLeft: 4,marginBottom:5 }} >Apply</Button>
+                    <Button variant="contained" sx={{ width: 100, height: 40, borderRadius: 2, marginTop: 5, backgroundColor: "#3C6FF5", marginLeft: 4, marginBottom: 5 }} >Apply</Button>
                 </Stack>
-        
+
 
             </Box>
 

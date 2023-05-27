@@ -7,11 +7,22 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
 import axios from "../../axios/axios";
 import { useNavigate } from "react-router-dom";
 import validationSchema from '../../USER/components/validation/Registervalidation';
+import { LoginSocialGoogle } from 'reactjs-social-login';
+import { GoogleLoginButton } from 'react-social-login-buttons'
+import GoogleIcon from '@mui/icons-material/Google';
+import Divider from '@mui/material/Divider';
+import toast, { Toaster } from 'react-hot-toast';
 
 
+type googleinfo = {
+    provider: string,
+    data: any
+}
 
 
 interface FormValues {
@@ -19,10 +30,10 @@ interface FormValues {
     password: string;
     email: string;
     phone: string;
-    confirmPassword:string;
+    confirmPassword: string;
 }
 
-function SignIn() {
+function SignUp() {
 
     const [error, setError] = useState(null)
     const navigate = useNavigate();
@@ -35,30 +46,42 @@ function SignIn() {
             email: '',
             phone: '',
             password: '',
-            confirmPassword:'',
+            confirmPassword: '',
 
         } as FormValues,
         validationSchema: validationSchema,
         onSubmit: (values) => {
             console.log(values);
-           
 
 
-            const body= {
+
+            const body = {
                 name: values.name,
                 email: values.email,
                 phone: values.phone,
                 password: values.password,
                 confirmPassword: values.confirmPassword,
             };
-            axios.post("/userauth",body).then(() => {
-                console.log("sucess");
-                navigate('/')
+            axios.post("/api/v1/user/signup", body).then((response) => {
+                if (response.data.status == true) {
+
+                    navigate("/")
+
+                } else {
+                    toast.error(response.data.message)
+                    setTimeout(()=>{
+                        navigate("/user/login")
+
+                    },1500)
+
+                }
 
 
-            }).catch((err) => {
-                console.error(err);
-                setError(err.response.data.error)
+            }).catch((response) => {
+                console.error(response.message);
+
+                navigate("/login")
+
             })
 
         },
@@ -75,18 +98,7 @@ function SignIn() {
                     alignItems: 'center',
                 }}
             >
-                <Box
-                    component="img"
-                    sx={{
-                        height: 233,
-                        width: 350,
-                        marginLeft: 80,
-                        maxHeight: { xs: 233, md: 167 },
-                        maxWidth: { xs: 350, md: 250 },
-                    }}
-                    alt=""
-                    src="https://jobbox-nextjs-v3.vercel.app/assets/imgs/page/login-register/img-4.svg"
-                />
+              
                 <Typography
                     component="h1"
                     variant="h5"
@@ -97,7 +109,60 @@ function SignIn() {
                 <Typography component="h1" variant="h5">
                     Start for free Today
                 </Typography>
+                <Box>
+                    <LoginSocialGoogle
+                        client_id={"18104366941-i704jcmbs4sg1926l716a85iqogl0se2.apps.googleusercontent.com"}
+                        scope="openid profile email"
+                        discoveryDocs="claims_supported"
+                        access_type="offline"
+                        onResolve={({ provider, data }: googleinfo) => {
+                           
 
+                             const body={
+                                name:data.name,
+                                email:data.email
+                             }
+                             console.log(body);
+                             
+
+                             axios.post('/api/v1/user/googlesignup',body).then((response)=>{
+                                console.log(("data poyiii"));
+                                
+                                if(response.data.status===true){
+                                    navigate('/')
+                                }else{
+                                    toast.error(response.data.message)
+                                    setTimeout(()=>{
+                                        navigate("/user/login")
+
+                                    },1500)
+                                   
+
+                                }
+
+                             }).catch((response) => {
+                                console.error(response.message);
+                
+                            })
+
+
+                             
+
+                        }}
+                        onReject={(err: any) => {
+                            console.log(err);
+                        }}
+                    >
+                     
+                        <Button variant="outlined" startIcon={<GoogleIcon />} sx={{ mt: 3, mb: 2, height: 50, width: "100%", color: "black", outlineColor: "black" }} >
+                            SignUp With Google
+                        </Button>
+                    </LoginSocialGoogle>
+
+                </Box>
+
+
+                <Divider >Or Continue with</Divider>
                 <Box component="form" noValidate onSubmit={formik.handleSubmit} sx={{ paddingLeft: 30 }}>
                     <TextField
                         margin="normal"
@@ -185,22 +250,24 @@ function SignIn() {
                     >
                         Submit & Register
                     </Button>
-                    
+                    <Grid container justifyContent="space-around"
+                        alignItems="center">
+
+                        <Link href="#" variant="body2" onClick={() => navigate('/user/login')}>
+                            {"Don't have an account? Sign Up"}
+                        </Link>
+
+                    </Grid>
+
                 </Box>
             </Box>
-            <Box
-                component="img"
-                sx={{
-                    height: 350,
-                    width: 700,
-                    maxHeight: { xs: 350, md: 250 },
-                    maxWidth: { xs: 450, md: 350 },
-                }}
-                alt=""
-                src="https://jobbox-nextjs-v3.vercel.app/assets/imgs/page/login-register/img-2.svg"
+         
+            <Toaster
+                position="top-center"
+                reverseOrder={false}
             />
         </Container>
     );
 }
 
-export default SignIn;
+export default SignUp;

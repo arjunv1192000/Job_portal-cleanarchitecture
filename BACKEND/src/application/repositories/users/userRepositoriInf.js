@@ -4,11 +4,13 @@
     console.log(repository);
 
     const userexist=(email)=>repository.userExist(email);
-    const create=(name,email,phone,password)=>repository.create(name,email,phone,password);
+    const create=(user)=>repository.create(user);
+    const googlecreate=(user)=>repository.googlecreate(user);
 
     return{
         userexist,
-        create
+        create,
+        googlecreate
     }
 
  }

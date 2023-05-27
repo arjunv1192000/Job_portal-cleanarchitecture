@@ -5,21 +5,72 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import GoogleIcon from '@mui/icons-material/Google';
-import { Stack } from "@mui/material";
-import Divider from '@mui/material/Divider';
 import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from 'react-hot-toast';
+import { useFormik } from 'formik';
+import axios from "../../axios/axios";
+import validationSchema from "./validation/Loginvalidation";
+
+
+
+interface FormValues {
+    email: string;
+    password: string;
+
+
+}
+
 
 export default function SignIn() {
-    //   const handleSubmit = (event) => {
-    //     event.preventDefault();
-    //     const data = new FormData(event.currentTarget);
-    //     console.log({
-    //       email: data.get("email"),
-    //       password: data.get("password"),
-    //     });
-    //   };
+   
     const navigate=useNavigate();
+
+    const formik = useFormik({
+        initialValues: {
+
+            email: '',
+            password: '',
+
+
+        } as FormValues,
+        validationSchema: validationSchema,
+        onSubmit: (values) => {
+            console.log(values);
+
+
+
+            const body = {
+
+                email: values.email,
+                password: values.password,
+
+            };
+            console.log(body);
+
+            axios.post("/api/v1/recruiter/login", body).then((response) => {
+                console.log(response);
+
+                if (response.data.status == true) {
+
+                    navigate("/recruiter/dashboard")
+
+                } else {
+                    toast.error("Invalid email or password")
+
+
+                }
+
+
+            }).catch((response) => {
+                console.error(response.message);
+
+               
+
+            })
+
+        },
+
+    });
 
     return (
         <Container component="main" maxWidth="md"   >
@@ -48,12 +99,10 @@ export default function SignIn() {
                 <Typography component="h1" variant="h5" sx={{ fontSize: 24, fontWeight: 1000 }}>
                 Recruiters  Login
                 </Typography>
-                <Button variant="outlined" startIcon={<GoogleIcon />} sx={{ mt: 3, mb: 2, height: 50, width: "59%", color: "black", outlineColor: "black" }} >
-                    Login  With Google
-                </Button>
+               
               
-                <Divider >Or Continue with</Divider>
-                <Box component="form" noValidate sx={{ mt: 5 }}>
+               
+                <Box component="form" noValidate onSubmit={formik.handleSubmit} sx={{ mt: 5 }}>
                     <TextField
                         margin="normal"
                         required
@@ -63,6 +112,12 @@ export default function SignIn() {
                         name="email"
                         autoComplete="email"
                         autoFocus
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
+                        error={formik.touched.email && Boolean(formik.errors.email)}
+                        helperText={formik.touched.email && formik.errors.email}
+                        sx={{ width: { xs: '100%', md: '70%' } }}
+
                     />
 
                     <TextField
@@ -74,15 +129,20 @@ export default function SignIn() {
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                        value={formik.values.password}
+                        onChange={formik.handleChange}
+                        error={formik.touched.password && Boolean(formik.errors.password)}
+                        helperText={formik.touched.password && formik.errors.password}
+                        sx={{ width: { xs: '100%', md: '70%' } }}
                     />
 
-                    <Button type="submit" fullWidth variant="contained" sx={{ mt: 5, mb: 2, height: 60, backgroundColor: '#131392' }}onClick={() => navigate('/recruiter/dashboard')} >
+                    <Button type="submit" fullWidth variant="contained"  sx={{ mt: 5, mb: 2, height: 60, width: { xs: '100%', md: '70%' }, backgroundColor: '#131392' }} >
                         Login
                     </Button>
                     <Grid container justifyContent="space-around"
                         alignItems="center">
 
-                        <Link href="#" variant="body2">
+                        <Link href="#" variant="body2" onClick={() => navigate('/recruiter/signup')}>
                             {"Don't have an account? Sign Up"}
                         </Link>
 
@@ -99,6 +159,10 @@ export default function SignIn() {
                 }}
                 alt=""
                 src="https://jobbox-nextjs-v3.vercel.app/assets/imgs/page/login-register/img-3.svg"
+            />
+             <Toaster
+                position="top-center"
+                reverseOrder={false}
             />
 
         </Container>

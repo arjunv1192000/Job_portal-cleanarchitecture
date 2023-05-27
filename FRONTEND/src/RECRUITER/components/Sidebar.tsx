@@ -15,8 +15,24 @@ function SideBar() {
   const navigate=useNavigate()
   return (
     <Box marginLeft={1} sx={{ width: 300, height: 500, borderRadius: 2 }}>
-      <Box position={'fixed'} sx={{borderRadius:2,boxShadow:6,width:300,height:160}}>
+      <Box position={'fixed'} sx={{borderRadius:2,boxShadow:6,width:300,height:500}}>
         <Stack >
+        <Avatar
+            alt=""
+            src="/static/images/avatar/1.jpg"
+            sx={{ width: 80, height: 80, marginTop: 4, marginLeft: 13 }}
+          />
+          <Typography textAlign={'center'} marginTop={1} fontSize={16} fontWeight={500}>
+            ARJUN V
+          </Typography>
+          <Typography textAlign={'center'} marginTop={1} fontSize={16} fontWeight={500}>
+              Company name
+          </Typography>
+          <Typography textAlign={'center'} marginTop={1} fontSize={16} fontWeight={300}>
+            arjun.vmaniyara@gmail.com
+          </Typography>
+          <Button variant="contained" sx={{ width: 200, borderRadius: 2, alignContent: 'center', marginLeft: 6, marginTop: 3, backgroundColor: "#3C6FF5" }}onClick={() => navigate('/user/addprofile')} >Complete profile</Button>
+         
           <List>
             <ListItemButton onClick={() => navigate('/recruiter/dashboard')} >
               <ListItemIcon>

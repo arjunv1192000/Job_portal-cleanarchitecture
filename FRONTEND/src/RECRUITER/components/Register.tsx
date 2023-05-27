@@ -1,25 +1,79 @@
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import GoogleIcon from '@mui/icons-material/Google';
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
+import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from 'react-hot-toast';
+import { useFormik } from 'formik';
+import validationSchema from "./validation/Registervalidation";
+import axios from "../../axios/axios";
+
+
+
+interface FormValues {
+    companyname:string,
+    email: string;
+    name: string;
+    password: string;
+    confirmPassword: string;
+}
 
 export default function SignIn() {
-    //   const handleSubmit = (event) => {
-    //     event.preventDefault();
-    //     const data = new FormData(event.currentTarget);
-    //     console.log({
-    //       email: data.get("email"),
-    //       password: data.get("password"),
-    //     });
-    //   };
+
+    const navigate=useNavigate();
+
+
+    const formik = useFormik({
+        initialValues: {
+            companyname:'',
+            name: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+
+        } as FormValues,
+        validationSchema: validationSchema,
+        onSubmit: (values) => {
+            console.log(values);
+
+
+
+            const body = {
+                companyname:values.companyname,
+                name: values.name,
+                email: values.email,
+                password: values.password,
+                confirmPassword: values.confirmPassword,
+            };
+            axios.post("/api/v1/recruiter/signup", body).then((response) => {
+                if (response.data.status == true) {
+
+                    navigate("/")
+
+                } else {
+                    toast.error(response.data.message)
+                    setTimeout(()=>{
+                        navigate("/recruiter/login")
+
+                    },1500)
+
+                }
+
+
+            }).catch((response) => {
+                console.error(response.message,);
+
+               
+
+            })
+
+        },
+
+    });
+    
 
     return (
         <Container component="main" maxWidth="md">
@@ -49,16 +103,20 @@ export default function SignIn() {
                 Registration for Recruiters
                 </Typography>
                
-                <Box component="form" noValidate sx={{paddingLeft:30 }}>
+                <Box component="form" noValidate onSubmit={formik.handleSubmit} sx={{paddingLeft:30 }}>
                     <TextField
                         margin="normal"
                         required
                         fullWidth
-                        id="Company name "
-                        label="Company name "
-                        name="Company name "
-                        autoComplete="Company name "
+                        id="companyname"
+                        label="companyname"
+                        name="companyname"
+                        autoComplete="companyname"
                         autoFocus
+                        value={formik.values.companyname}
+                        onChange={formik.handleChange}
+                        error={formik.touched.companyname && Boolean(formik.errors.companyname)}
+                        helperText={formik.touched.companyname && formik.errors.companyname}
                         sx={{width:"60%",}}
                     />
                     <TextField
@@ -70,17 +128,25 @@ export default function SignIn() {
                         name="email"
                         autoComplete="email"
                         autoFocus
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
+                        error={formik.touched.email && Boolean(formik.errors.email)}
+                        helperText={formik.touched.email && formik.errors.email}
                         sx={{width:"60%"}}
                     />
                     <TextField
                         margin="normal"
                         required
                         fullWidth
-                        id="username"
-                        label="Username"
-                        name="username"
-                        autoComplete="username"
+                        id="name"
+                        label="name"
+                        name="name"
+                        autoComplete="name"
                         autoFocus
+                        value={formik.values.name}
+                        onChange={formik.handleChange}
+                        error={formik.touched.name && Boolean(formik.errors.name)}
+                        helperText={formik.touched.name && formik.errors.name}
                         sx={{width:"60%"}}
                     />
 
@@ -92,6 +158,10 @@ export default function SignIn() {
                         label="Password"
                         type="password"
                         id="password"
+                        value={formik.values.password}
+                        onChange={formik.handleChange}
+                        error={formik.touched.password && Boolean(formik.errors.password)}
+                        helperText={formik.touched.password && formik.errors.password}
                         autoComplete="current-password"
                         sx={{width:"60%"}}
                     />
@@ -99,11 +169,15 @@ export default function SignIn() {
                         margin="normal"
                         required
                         fullWidth
-                        id="Re-password"
-                        label="Re-password"
-                        name="Re-password"
-                        autoComplete="Re-password"
+                        id="confirmPassword"
+                        label="confirmPassword"
+                        name="confirmPassword"
+                        autoComplete="confirmPassword"
                         autoFocus
+                        value={formik.values.confirmPassword}
+                        onChange={formik.handleChange}
+                        error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
+                        helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
                         sx={{width:"60%"}}
                     />
 
@@ -112,7 +186,7 @@ export default function SignIn() {
                     </Button>
                     <Grid container paddingLeft={9}>
 
-                        <Link href="#" variant="body2">
+                        <Link href="#" variant="body2" onClick={() => navigate('/recruiter/login')}>
                             {"Already have an account?Login"}
                         </Link>
 
@@ -129,6 +203,10 @@ export default function SignIn() {
                 }}
                 alt=""
                 src="https://jobbox-nextjs-v3.vercel.app/assets/imgs/page/login-register/img-2.svg"
+            />
+             <Toaster
+                position="top-center"
+                reverseOrder={false}
             />
             
         </Container>

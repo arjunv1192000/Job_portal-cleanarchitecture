@@ -13,8 +13,8 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 
-const pages = ['HOME','JOBS','PROFILE'];
-const settings = ['Login','Profile',  'Logout'];
+const pages = ['HOME', 'JOBS', 'PROFILE'];
+const settings = ['Login', 'Profile', 'Logout'];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -35,7 +35,7 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   }
   return (
-    <AppBar position="fixed" sx={{marginTop:3,backgroundColor:'white',width:"90%",marginRight:10,borderRadius:3}} >
+    <AppBar position="fixed" sx={{ marginTop: 3, backgroundColor: 'white', width: "90%", marginRight: 10, borderRadius: 3 }} >
       <Container maxWidth="xl" >
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />

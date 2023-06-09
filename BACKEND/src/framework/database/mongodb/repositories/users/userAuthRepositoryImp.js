@@ -27,6 +27,7 @@ const userAuthRepositoryImp=()=>{
         const newuser=new userdata({
             name:user?.getname(),
             email:user?.getemail(),
+            image:user?.getimage()
          
 
         })

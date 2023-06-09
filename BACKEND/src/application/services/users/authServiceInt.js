@@ -5,6 +5,9 @@ const authServiceInterface=(repository)=>{
     const comparePassword=(password,hashPassword)=>repository.comparePassword(password,hashPassword)
     const generateAccessToken = (userId) => repository.generateAccessToken(userId);
     const generatRefreshToken=(userId)=>repository.generatRefreshToken(userId)
+    const verifyAccessToken=(token)=>repository.verifyAccessToken(token)
+    const verifyRefreshToken=(token)=>repository.verifyRefreshToken(token)
+  
     
 
 
@@ -14,6 +17,8 @@ const authServiceInterface=(repository)=>{
         comparePassword,
         generateAccessToken,
         generatRefreshToken,
+        verifyAccessToken,
+        verifyRefreshToken
     }
 
 }

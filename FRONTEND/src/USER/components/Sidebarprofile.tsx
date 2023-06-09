@@ -29,7 +29,7 @@ function Sidebarprofile() {
               </ListItemIcon>
               <ListItemText primary="My Jobs" />
             </ListItemButton>
-            <ListItemButton onClick={() => navigate('/user/myjob')} >
+            <ListItemButton onClick={() => navigate('/user/savedjob')} >
               <ListItemIcon>
                 <AccountBoxIcon />
 

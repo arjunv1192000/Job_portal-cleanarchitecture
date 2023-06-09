@@ -3,16 +3,25 @@
 const login=async (email,password,repositories,authService)=>{
 
     const isEmail= await repositories.userexist(email)
-    console.log(isEmail,"sdasadsdsadas");
+    console.log(isEmail,"login");
+   
     if(isEmail.email !=0 && isEmail.password){
         const isPassword=await authService.comparePassword(password,isEmail.password)
         if(isPassword){
-            console.log("passsssssssssssssssss");
+          
+            const isUser={
+                userId:isEmail._id,
+                userName:isEmail.name,
+                userEmail:isEmail.email,
+        
+              }
+              const AccessToken = await authService.generateAccessToken(isUser);
+              const RefreshToken = await authService.generatRefreshToken(isUser);
 
-            return({status:true})
+            return({status:true,isUser,AccessToken,RefreshToken})
             
         }else{
-            console.log("false ppppppppppppppppp");
+           
             return({status:false})
 
         }

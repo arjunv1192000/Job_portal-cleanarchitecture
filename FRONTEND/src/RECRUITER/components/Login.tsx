@@ -8,8 +8,10 @@ import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
 import { useFormik } from 'formik';
-import axios from "../../axios/axios";
+import axios from '../utils/axios'
 import validationSchema from "./validation/Loginvalidation";
+import { useDispatch } from "react-redux";
+import {login} from '../../redux/reducer/recruiterSlice'
 
 
 
@@ -24,6 +26,7 @@ interface FormValues {
 export default function SignIn() {
    
     const navigate=useNavigate();
+    const dispatch=useDispatch();
 
     const formik = useFormik({
         initialValues: {
@@ -47,10 +50,13 @@ export default function SignIn() {
             };
             console.log(body);
 
-            axios.post("/api/v1/recruiter/login", body).then((response) => {
+            axios.post("/login", body).then((response) => {
                 console.log(response);
 
                 if (response.data.status == true) {
+                    localStorage.setItem('access_token_recruiter', response.data.AccessToken)
+                    localStorage.setItem('refresh_token_recruiter', response.data.RefreshToken)
+                    dispatch(login({id:response.data.isRecruiter.recruiterId ,companyname:response.data.isRecruiter.recruiterCompany, name: response.data.isRecruiter.recruiterName,email: response.data.isRecruiter.recruiterEmail,image:response.data.isRecruiter.recruiterImage,jwt:response.data.AccessToken}))
 
                     navigate("/recruiter/dashboard")
 
@@ -73,7 +79,7 @@ export default function SignIn() {
     });
 
     return (
-        <Container component="main" maxWidth="md"   >
+        <Container component="main" maxWidth="md">
             <Box
                 sx={{
                     marginTop: 8,
@@ -102,7 +108,7 @@ export default function SignIn() {
                
               
                
-                <Box component="form" noValidate onSubmit={formik.handleSubmit} sx={{ mt: 5 }}>
+                <Box component="form" noValidate onSubmit={formik.handleSubmit} sx={{paddingLeft:20 }}>
                     <TextField
                         margin="normal"
                         required
@@ -116,7 +122,8 @@ export default function SignIn() {
                         onChange={formik.handleChange}
                         error={formik.touched.email && Boolean(formik.errors.email)}
                         helperText={formik.touched.email && formik.errors.email}
-                        sx={{ width: { xs: '100%', md: '70%' } }}
+                        sx={{width:"70%",}}
+                       
 
                     />
 
@@ -133,14 +140,14 @@ export default function SignIn() {
                         onChange={formik.handleChange}
                         error={formik.touched.password && Boolean(formik.errors.password)}
                         helperText={formik.touched.password && formik.errors.password}
-                        sx={{ width: { xs: '100%', md: '70%' } }}
+                        sx={{width:"70%",}}
+                        
                     />
 
                     <Button type="submit" fullWidth variant="contained"  sx={{ mt: 5, mb: 2, height: 60, width: { xs: '100%', md: '70%' }, backgroundColor: '#131392' }} >
                         Login
                     </Button>
-                    <Grid container justifyContent="space-around"
-                        alignItems="center">
+                    <Grid paddingLeft={10}>
 
                         <Link href="#" variant="body2" onClick={() => navigate('/recruiter/signup')}>
                             {"Don't have an account? Sign Up"}

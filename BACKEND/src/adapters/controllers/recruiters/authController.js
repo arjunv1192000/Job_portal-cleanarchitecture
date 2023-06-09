@@ -9,10 +9,10 @@ const authController = (recruiterAuthRepositoryInt, recruiterAuthRepositoryImp, 
 
     const createRecruiter = (req, res) => {
 
-        const { companyname, name, email, password } = req.body
+        const { companyname, name, email, password,image } = req.body
 
-        register(companyname, name, email, password, dbrepository, authService).then((response) => {
-            console.log(response);
+        register(companyname, name, email, password,image, dbrepository, authService).then((response) => {
+            console.log(response,"controller");
             res.json(response)
 
         }).catch((err) => console.log(err))

@@ -7,13 +7,20 @@ const register = async (name, email, phone, password, repositories, authService)
       const hashpassword = await authService.bcryptpassword(password);
       const userdetails = userdata(name, email, phone, hashpassword);
       const newuser = await repositories.create(userdetails);
-      const AccessToken = await authService.generateAccessToken(newuser._id);
-      const RefreshToken = await authService.generatRefreshToken(newuser._id);
+      
+      const isUser={
+        userId:newuser._id,
+        userName:newuser.name,
+        userEmail:newuser.email,
 
-      console.log(AccessToken,"aaaaaaaaaaaaaaaaa");
-      console.log(RefreshToken,"aaa");
+      }
+      const AccessToken = await authService.generateAccessToken(isUser);
+      const RefreshToken = await authService.generatRefreshToken(isUser);
 
-      return { status: true, newuser, AccessToken, RefreshToken };
+      console.log(AccessToken);
+      console.log(RefreshToken);
+
+      return { status: true,isUser, AccessToken, RefreshToken };
     } else {
       return { message: 'email already exists', status: false };
     }

@@ -12,11 +12,35 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import { useSelector } from "react-redux";
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from "react-redux";
+import {logout} from '../../redux/reducer/userSlice'
 
-const pages = ['HOME', 'JOBS', 'PROFILE'];
-const settings = ['Login', 'Profile', 'Logout'];
+type RootState = {
+  user: {
+    value: {
+      id: string | null;
+      name: string | null;
+      email: string | null;
+      image: string |null;
+      access_token: string;
+    };
+  };
+};
+
+
+
 
 function ResponsiveAppBar() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const userdata = useSelector((state:RootState) => state.user.value);
+  const pages = ['HOME', 'JOBS', 'PROFILE'];
+  const settings = userdata.id ? ['Profile', 'Logout'] : ['Login', 'Profile', 'Logout'];
+
+
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -27,13 +51,20 @@ function ResponsiveAppBar() {
     setAnchorElUser(event.currentTarget);
   };
 
+ 
+  
+  
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
-
   const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  }
+    dispatch(logout()); 
+    navigate('/'); 
+  };
+  
+  
+
+
   return (
     <AppBar position="fixed" sx={{ marginTop: 3, backgroundColor: 'white', width: "90%", marginRight: 10, borderRadius: 3 }} >
       <Container maxWidth="xl" >
@@ -87,7 +118,7 @@ function ResponsiveAppBar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} >
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -127,7 +158,7 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt={userdata.image ? '' : undefined}  src={userdata.image} />
               </IconButton>
             </Tooltip>
             <Menu

@@ -10,28 +10,44 @@ import HomeIcon from '@mui/icons-material/Home';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from "react-redux";
+
+type RootState = {
+  user: {
+    value: {
+      id: string | null;
+      companyname:string |null;
+      name: string | null;
+      email: string | null;
+      image:string |null;
+      access_token: string;
+    };
+  };
+};
 
 function SideBar() {
   const navigate=useNavigate()
+
+  const recruiterdata = useSelector((state:RootState) => state.user.value);
   return (
-    <Box marginLeft={1} sx={{ width: 300, height: 500, borderRadius: 2 }}>
-      <Box position={'fixed'} sx={{borderRadius:2,boxShadow:6,width:300,height:500}}>
+    <Box marginLeft={2} sx={{ width: 300, height: 500, borderRadius: 2,marginTop:2 }}>
+      <Box  sx={{borderRadius:2,boxShadow:6,width:300,height:400}}>
         <Stack >
         <Avatar
             alt=""
-            src="/static/images/avatar/1.jpg"
+            src={recruiterdata.image}
             sx={{ width: 80, height: 80, marginTop: 4, marginLeft: 13 }}
           />
           <Typography textAlign={'center'} marginTop={1} fontSize={16} fontWeight={500}>
-            ARJUN V
+           {recruiterdata.name}
           </Typography>
           <Typography textAlign={'center'} marginTop={1} fontSize={16} fontWeight={500}>
-              Company name
+              {recruiterdata.companyname}
           </Typography>
           <Typography textAlign={'center'} marginTop={1} fontSize={16} fontWeight={300}>
-            arjun.vmaniyara@gmail.com
+            {recruiterdata.email}
           </Typography>
-          <Button variant="contained" sx={{ width: 200, borderRadius: 2, alignContent: 'center', marginLeft: 6, marginTop: 3, backgroundColor: "#3C6FF5" }}onClick={() => navigate('/user/addprofile')} >Complete profile</Button>
+          
          
           <List>
             <ListItemButton onClick={() => navigate('/recruiter/dashboard')} >

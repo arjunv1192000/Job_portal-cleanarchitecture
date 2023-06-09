@@ -2,12 +2,52 @@ import React from 'react'
 import { Box, Stack, TextField, Button, Grid, Avatar, Typography } from '@mui/material'
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import SchoolIcon from '@mui/icons-material/School';
+import { useSelector } from "react-redux";
+import { useEffect, useState } from 'react';
+import axios from '../utils/axios.ts'
+type RootState = {
+    user: {
+        value: {
+            id: string | null;
+            name: string | null;
+            email: string | null;
+            image: string | null;
+            access_token: string;
+        };
+    };
+};
+
+
+
 
 function Profile() {
+    const user = useSelector((state: RootState) => state.user.value);
+    const [profile, setprofile] = useState<any>(null);
+
+    const id = user.id
+
+
+    useEffect(() => {
+        axios.get('/profile/getprofile?id=' + id).then((response) => {
+            console.log(response.data.profiledata);
+            setprofile(response.data.profiledata)
+
+
+        }).catch((response) => {
+            console.error(response.message);
+
+
+
+        })
+
+    }, [id])
+
+
+
     return (
         <Box
 
-            sx={{ width: "70%", height: 1000, borderRadius: 2, margin: 3,   }}>
+            sx={{ width: "70%", height: 1000, borderRadius: 2, margin: 3, }}>
             <Stack>
                 <Stack direction={'row'}>
                     <Box
@@ -16,7 +56,7 @@ function Profile() {
                             width: 150,
                             height: 150,
                             borderRadius: 2,
-                            backgroundImage: `url('https://jobbox-nextjs-v3.vercel.app/assets/imgs/page/job-single/thumb.png')`,
+                            backgroundImage: `url(${profile?.image})`,
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
                             display: 'flex', justifyContent: 'center', alignItems: 'center',
@@ -28,16 +68,20 @@ function Profile() {
                     ></Box>
                     <Stack>
                         <Typography marginTop={6} fontSize={24} fontWeight={500}>
-                            ARJUN V
+                            {profile?.name}
+
                         </Typography>
                         <Typography fontSize={16} fontWeight={500} paddingTop={1} >
-                            Fullstack Developer
+                            {profile?.jobRole}
+
                         </Typography>
                         <Typography fontSize={16} fontWeight={500} paddingTop={2} >
-                            arjun.vmaniyara@gmail.com
+                            {profile?.email}
+
                         </Typography>
                         <Typography fontSize={16} fontWeight={500} paddingTop={2}>
-                            9745662340
+                            {profile?.phone}
+
                         </Typography>
 
                     </Stack>
@@ -48,34 +92,32 @@ function Profile() {
                     About Me
                 </Typography>
                 <Typography fontSize={18} fontWeight={500} marginLeft={5} marginTop={1}>
-                    Hello there! My name is Alan Walker. I am a graphic designer, and I’m very passionate and dedicated to my work. With 20 years experience as a professional a graphic designer, I have acquired the skills and knowledge necessary to make your project a success.
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis illum fuga eveniet. Deleniti asperiores, commodi quae ipsum quas est itaque, ipsa, dolore beatae voluptates nemo blanditiis iste eius officia minus. Id nisi, consequuntur sunt impedit quidem, vitae mollitia!
-
+                    {profile?.about}
                 </Typography>
                 <Stack direction="row" alignItems="center" gap={3} margin={3}>
-                    <AddLocationAltIcon/>
-                    
+                    <AddLocationAltIcon />
+
                     <Typography variant="body1">Location :</Typography>
-                    <Typography variant="body1">Kochi</Typography>
+                    <Typography variant="body1"> {profile?.location}</Typography>
                 </Stack>
                 <Stack direction="row" alignItems="center" gap={3} margin={3}>
-                     <SchoolIcon/>
-                    
+                    <SchoolIcon />
+
                     <Typography variant="body1">Education :</Typography>
-                    <Typography variant="body1">B tech</Typography>
+                    <Typography variant="body1">  {profile?.education} </Typography>
                 </Stack>
                 <Stack direction="row" alignItems="center" gap={3} margin={3}>
-                     <SchoolIcon/>
-                    
+                    <SchoolIcon />
+
                     <Typography variant="body1">Language :</Typography>
-                    <Typography variant="body1">English,malayalam</Typography>
+                    <Typography variant="body1">  {profile?.language} </Typography>
                 </Stack>
-                <Stack direction="row" alignItems="center" gap={3} margin={3}>
+                {/* <Stack direction="row" alignItems="center" gap={3} margin={3}>
                      <SchoolIcon/>
                     
                     <Typography variant="body1">Personal website:</Typography>
                     <Typography variant="body1">wwww.sdsdsd.com</Typography>
-                </Stack>
+                </Stack> */}
                 <Button variant="contained" sx={{ width: 200, height: 40, borderRadius: 2, marginTop: 5, backgroundColor: "#3C6FF5", marginLeft: 4 }} >Update Profile</Button>
 
             </Stack>

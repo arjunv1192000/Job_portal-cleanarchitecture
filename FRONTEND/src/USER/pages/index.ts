@@ -6,5 +6,6 @@ export{default as Jobdetail}from './Jobdetails'
 export{default as Myjob}from './Myjobs'
 export{default as Profile}from './Userprofile'
 export{default as Addprofile}from './Profileadd'
+export{default as Savedjobs}from './Savedjobpage'
 
 

@@ -9,7 +9,8 @@ import recruiterdata from "../../models/recruitermodels/recruiterModels.js";
             companyname:recruiter?.getcompanyname(),
             name:recruiter?.getname(),
             email:recruiter?.getemail(),
-            password:recruiter?.getpassword()
+            password:recruiter?.getpassword(),
+            image:recruiter?.getimage()
 
         })
         return newuser.save()

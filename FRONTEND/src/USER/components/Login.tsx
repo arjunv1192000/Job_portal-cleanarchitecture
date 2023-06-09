@@ -10,10 +10,12 @@ import { Stack } from "@mui/material";
 import Divider from '@mui/material/Divider';
 import { useNavigate } from "react-router-dom";
 import { useFormik } from 'formik';
-import axios from "../../axios/axios";
+import axios from '../utils/axios.ts'
 import validationSchema from "./validation/Loginvalidation";
 import toast, { Toaster } from 'react-hot-toast';
 import { LoginSocialGoogle } from 'reactjs-social-login';
+import { useDispatch } from "react-redux";
+import {login,logout}from '../../redux/reducer/userSlice.ts'
 
 
 type googleinfo = {
@@ -34,6 +36,7 @@ export default function SignIn() {
 
 
     const navigate = useNavigate();
+    const dispatch=useDispatch();
 
     const formik = useFormik({
         initialValues: {
@@ -45,7 +48,7 @@ export default function SignIn() {
         } as FormValues,
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            console.log(values);
+            console.log(values,"ssss");
 
 
 
@@ -55,12 +58,15 @@ export default function SignIn() {
                 password: values.password,
 
             };
-            console.log(body);
+            console.log(body,"ddddddd");
 
-            axios.post("/api/v1/user/login", body).then((response) => {
+            axios.post("/login", body).then((response) => {
                 console.log(response);
 
                 if (response.data.status == true) {
+                    localStorage.setItem('access_token_user', response.data.AccessToken)
+                    localStorage.setItem('refresh_token_user', response.data.RefreshToken)
+                    dispatch(login({id:response.data.isUser.userId,name:response.data.isUser.userName,email:response.data.isUser.userEmail,access_token:response.data.AccessToken,refresh_token:response.data.RefreshToken}))
 
                     navigate("/")
 
@@ -116,19 +122,29 @@ export default function SignIn() {
                     discoveryDocs="claims_supported"
                     access_type="offline"
                     onResolve={({ provider, data }: googleinfo) => {
+                        console.log(data);
+                        
 
 
                         const body = {
                            
                             email: data.email
                         }
-                        console.log(body,"sssssssssssssssssssssssssssss");
+                    
+                        console.log(body,"...........................");
+                        
 
 
-                        axios.post('/api/v1/user/googlelogin', body).then((response) => {
+                        axios.post('/googlelogin', body).then((response) => {
                             console.log(("data poyiii"));
 
                             if (response.data.status === true) {
+                                localStorage.setItem('access_token_user', response.data.AccessToken)
+                                localStorage.setItem('refresh_token-user', response.data.RefreshToken)
+                                dispatch(login({id:response.data.isUser.userId,name:response.data.isUser.userName,email:response.data.isUser.userEmail,image: response.data.isUser.userImage,access_token:response.data.AccessToken,refresh_token:response.data.RefreshToken}))
+                               
+                                
+                              
                                 navigate('/')
                             } else {
                                 toast.error("Invalid email or password")

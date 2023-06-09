@@ -9,14 +9,15 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
-import axios from "../../axios/axios";
+import axios from '../utils/axios.ts'
 import { useNavigate } from "react-router-dom";
 import validationSchema from '../../USER/components/validation/Registervalidation';
 import { LoginSocialGoogle } from 'reactjs-social-login';
-import { GoogleLoginButton } from 'react-social-login-buttons'
 import GoogleIcon from '@mui/icons-material/Google';
 import Divider from '@mui/material/Divider';
 import toast, { Toaster } from 'react-hot-toast';
+import { useDispatch } from "react-redux";
+import {login} from '../../redux/reducer/userSlice'
 
 
 type googleinfo = {
@@ -37,6 +38,7 @@ function SignUp() {
 
     const [error, setError] = useState(null)
     const navigate = useNavigate();
+    const dispatch=useDispatch();
 
 
 
@@ -62,17 +64,20 @@ function SignUp() {
                 password: values.password,
                 confirmPassword: values.confirmPassword,
             };
-            axios.post("/api/v1/user/signup", body).then((response) => {
+            axios.post("/signup", body).then((response) => {
                 if (response.data.status == true) {
+                    localStorage.setItem('access_token_user', response.data.AccessToken)
+                    localStorage.setItem('refresh_token_user', response.data.RefreshToken)
+                    dispatch(login({id:response.data.isUser.userId ,name: response.data.isUser.userName,email: response.data.isUser.userEmail,jwt:response.data.AccessToken}))
 
                     navigate("/")
 
                 } else {
                     toast.error(response.data.message)
-                    setTimeout(()=>{
+                    setTimeout(() => {
                         navigate("/user/login")
 
-                    },1500)
+                    }, 1500)
 
                 }
 
@@ -98,7 +103,7 @@ function SignUp() {
                     alignItems: 'center',
                 }}
             >
-              
+
                 <Typography
                     component="h1"
                     variant="h5"
@@ -116,44 +121,54 @@ function SignUp() {
                         discoveryDocs="claims_supported"
                         access_type="offline"
                         onResolve={({ provider, data }: googleinfo) => {
-                           
 
-                             const body={
-                                name:data.name,
-                                email:data.email
-                             }
-                             console.log(body);
-                             
 
-                             axios.post('/api/v1/user/googlesignup',body).then((response)=>{
-                                console.log(("data poyiii"));
-                                
-                                if(response.data.status===true){
+                            console.log(data);
+                            
+
+
+                            const body = {
+                                name: data.name,
+                                email: data.email,
+                                image:data.picture
+                            }
+                            console.log(body);
+
+
+                            axios.post('/googlesignup', body).then((response) => {
+                               
+
+                                if (response.data.status === true) {
+                                    console.log(response.data,"goooooo");
+                                    localStorage.setItem('access_token_user', response.data.AccessToken)
+                                    localStorage.setItem('refresh_token_user', response.data.RefreshToken)
+                                    dispatch(login({id:response.data.isUser.userId ,name: response.data.isUser.userName,email: response.data.isUser.userEmail,image: response.data.isUser.userImage,jwt:response.data.AccessToken}))
+                                    
                                     navigate('/')
-                                }else{
+                                } else {
                                     toast.error(response.data.message)
-                                    setTimeout(()=>{
+                                    setTimeout(() => {
                                         navigate("/user/login")
 
-                                    },1500)
-                                   
+                                    }, 1500)
+
 
                                 }
 
-                             }).catch((response) => {
+                            }).catch((response) => {
                                 console.error(response.message);
-                
+
                             })
 
 
-                             
+
 
                         }}
                         onReject={(err: any) => {
                             console.log(err);
                         }}
                     >
-                     
+
                         <Button variant="outlined" startIcon={<GoogleIcon />} sx={{ mt: 3, mb: 2, height: 50, width: "100%", color: "black", outlineColor: "black" }} >
                             SignUp With Google
                         </Button>
@@ -261,7 +276,7 @@ function SignUp() {
 
                 </Box>
             </Box>
-         
+
             <Toaster
                 position="top-center"
                 reverseOrder={false}

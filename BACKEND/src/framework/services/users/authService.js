@@ -8,17 +8,23 @@ const authServiceImp=()=>{
         return hashpassword
 
 
+
     }
+    const role="user"
     const comparePassword = (password, hashPassword) => bcrypt.compare(password, hashPassword);
 
-    const generateAccessToken=(user)=>jwt.sign(user,config.ACESS_TOKEN_SCERET,{expiresIn:'15m'})
-    const generatRefreshToken=(user)=>jwt.sign(user,config.REFRESH_TOKEN_SECRET,{expiresIn:"7d"})
+    const generateAccessToken=(user)=>jwt.sign({user},config.ACESS_TOKEN_SCERET,{expiresIn:'15m'})
+    const generatRefreshToken=(user)=>jwt.sign({user},config.REFRESH_TOKEN_SECRET,{expiresIn:"7d"})
+    const verifyAccessToken = (token) => jwt.verify(token, config.ACESS_TOKEN_SCERET);
+    const verifyRefreshToken=(token)=>jwt.verify(token,config.REFRESH_TOKEN_SECRET)
 
     return{
         bcryptpassword ,
         comparePassword,
         generateAccessToken,
         generatRefreshToken,
+        verifyAccessToken,
+        verifyRefreshToken
     }
 
 }

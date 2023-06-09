@@ -19,7 +19,12 @@ const recruiterSchema = new Schema({
     password: {
         type: String,
 
+    },
+    image: {
+        type: String,
+
     }
+
 
 
 })

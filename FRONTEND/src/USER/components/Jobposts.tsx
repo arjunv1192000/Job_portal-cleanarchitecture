@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Stack,Button } from '@mui/material'
+import { Box, Stack, Button } from '@mui/material'
 import Typography from '@mui/material/Typography';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -8,34 +8,49 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import Avatar from '@mui/material/Avatar';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import CurrencyRupeeOutlinedIcon from '@mui/icons-material/CurrencyRupeeOutlined';
 import { useNavigate } from 'react-router-dom';
 
-function Jobpost2() {
-  const navigate=useNavigate()
+type Props = {
+  jobId: string;
+  recruiterId:string;
+  jobtitle: string;
+  jobType: string;
+  location: string;
+  salary: string;
+  date: string;
+  about:string;
+  image:string;
+  companyname:string;
+  
+};
+
+const Jobpost2: React.FC<Props>=({jobId,recruiterId,jobtitle,jobType,location,salary,date,about,image,companyname})=> {
+  const navigate = useNavigate()
   return (
-    <Box marginLeft={1} sx={{ width: 350, height:'auto', borderRadius: 2, boxShadow: 6, }}  onClick={() => navigate('/user/jobdetails')}>
+    <Box marginLeft={1} sx={{ width: 350, height: 'auto', borderRadius: 2, boxShadow: 6,marginBottom:2 }}  onClick={() => navigate(`/user/jobdetails/${jobId}`)}>
       <Stack >
-      <Stack direction={'row'}>
+        <Stack direction={'row'}>
           <Avatar
             alt=""
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3C2p4F7n9zvRLQufC2NGXHHgT9v5sKFtNTUA6odQ&s"
+            src={image}
             sx={{ width: 50, height: 50, marginTop: 5, marginLeft: 1 }}
           />
 
           <Typography marginLeft={3} marginTop={7} fontSize={16} fontWeight={500}>
-          Facebook
+           {companyname}
           </Typography>
-          <ListItemButton  sx={{marginTop:6,marginLeft:6}} >
-          <ListItemIcon>
-          <AddLocationAltIcon/>
+          <ListItemButton sx={{ marginTop: 6, marginLeft: 6 }} >
+            <ListItemIcon>
+              <AddLocationAltIcon />
 
-          </ListItemIcon>
-          <ListItemText primary="kochi" />
-        </ListItemButton>
+            </ListItemIcon>
+            <ListItemText primary={location} />
+          </ListItemButton>
 
         </Stack>
         <Typography marginLeft={3} marginTop={3} fontSize={16} fontWeight={500}>
-        UX Designer & Researcher remote
+         {jobtitle}
         </Typography>
         <Stack direction={'row'} spacing={2} marginTop={3}>
           <ListItemButton  >
@@ -43,55 +58,55 @@ function Jobpost2() {
               <AccountBoxIcon />
 
             </ListItemIcon>
-            <ListItemText primary="Remote" />
+            <ListItemText primary={jobType} />
           </ListItemButton>
           <ListItemButton  >
             <ListItemIcon>
-            <AccessTimeIcon/>
+              <AccessTimeIcon />
 
             </ListItemIcon>
-            <ListItemText primary="5 minago" />
+            <ListItemText primary={date} />
           </ListItemButton>
 
         </Stack>
         <Typography marginLeft={3} marginTop={3} fontSize={16} fontWeight={300}>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae architecto eveniet, dolor quo repellendus pariatur
-          
-          
-          </Typography>
-        
-        <Stack direction={'row'} marginTop={5} marginLeft={4} flexDirection={'row'}>
-          
+         {about}
 
-            <ListItemText primary="HTML" />
-            <ListItemText primary="CSS" />
-            <ListItemText primary="Javascript" />
-            
-         
+
+        </Typography>
+
+        <Stack direction={'row'} marginTop={5} marginLeft={4} flexDirection={'row'}>
+
+
+          <ListItemText primary="HTML" />
+          <ListItemText primary="CSS" />
+          <ListItemText primary="Javascript" />
+
+
 
 
         </Stack>
         <Stack direction={'row'} marginTop={3}>
           <ListItemButton   >
-          <ListItemIcon>
-          <AccountBoxIcon/>
+            <ListItemIcon>
+              <CurrencyRupeeOutlinedIcon />
 
-          </ListItemIcon>
-          <ListItemText primary="8-10LPA" />
-        </ListItemButton>
+            </ListItemIcon>
+            <ListItemText primary={salary} />
+          </ListItemButton>
 
-        <Button variant="contained" sx={{ width: 100,height:40, borderRadius: 2, backgroundColor: "#3C6FF5" ,marginRight:4}} >Apply</Button>
+          <Button variant="contained" sx={{ width: 100, height: 40, borderRadius: 2, backgroundColor: "#3C6FF5", marginRight: 4 }} >Apply</Button>
 
         </Stack>
-        
-       
+
+
 
 
 
       </Stack>
 
     </Box>
-   
+
   )
 }
 

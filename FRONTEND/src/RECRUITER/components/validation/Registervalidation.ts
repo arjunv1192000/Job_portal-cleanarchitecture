@@ -6,6 +6,7 @@ interface MyFormData {
     name: string;
     email: string;
     password: string;
+    image: FileList | null;
 }
 
 const validationSchema: ObjectSchema<MyFormData> = Yup.object().shape({
@@ -33,6 +34,8 @@ const validationSchema: ObjectSchema<MyFormData> = Yup.object().shape({
     confirmPassword: Yup.string()
         .oneOf([Yup.ref('password')], 'Passwords must match').nullable()
         .required('Confirm password is required'),
+    image:Yup.mixed()
+    .required('Image is required'),
 
 
 });

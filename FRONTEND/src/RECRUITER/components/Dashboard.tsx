@@ -1,67 +1,89 @@
-import React from 'react'
-import { Box, Stack, TextField, Button, Grid, Avatar, Typography } from '@mui/material'
-import ListItemText from '@mui/material/ListItemText';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
+import React from 'react';
+import {
+  Box,
+  Stack,
+  Typography,
+  ListItemText,
+  ListItemButton,
+  ListItemIcon,
+  Avatar,
+  Button,
+} from '@mui/material';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import PersonIcon from '@mui/icons-material/Person';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from "react-redux";
 
-function Dashboard() {
-    const navigate=useNavigate()
-    return (
-        
-            <Box sx={{ width: "90%", height: 350, borderRadius: 2 , boxShadow: 6, backgroundColor: 'white',marginTop:1 }}>
-                <Stack>
-                    <Stack direction={'row'}>
-                        <Avatar
-                            alt=""
-                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3C2p4F7n9zvRLQufC2NGXHHgT9v5sKFtNTUA6odQ&s"
-                            sx={{ width: 50, height: 50, marginTop: 4, marginLeft: 3 }}
-                        />
-                        <Typography marginLeft={3} marginTop={7} fontSize={21} fontWeight={500}>
-                            Facebook
-                        </Typography>
+type RootState = {
+    user: {
+      value: {
+        id: string | null;
+        companyname:string |null;
+        name: string | null;
+        email: string | null;
+        image:string |null;
+        access_token: string;
+      };
+    };
+  };
 
+type Props = {
+  jobid: string;
+  jobtitle: string;
+  about: string;
+  salary: string;
+};
 
+const Dashboard: React.FC<Props> = ({ jobid, jobtitle, about, salary }) => {
+  const navigate = useNavigate();
+  const recruiterdata = useSelector((state:RootState) => state.user.value);
 
-                    </Stack>
-                    <Typography marginLeft={3} marginTop={3} fontSize={26} fontWeight={500}>
-                        UX Designer & Researcher remote
-                    </Typography>
-                    <Typography marginLeft={3} marginTop={3} fontSize={16} fontWeight={300}>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae architecto eveniet, dolor quo repellendus pariatur
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae architecto eveniet, dolor quo repellendus pariatur
+ 
 
-                    </Typography>
-                    <ListItemButton   >
-                        <ListItemIcon>
-                            <AccountBoxIcon />
+  return (
+    <Box sx={{ width: '90%', height:'auto', borderRadius: 2, boxShadow: 6, backgroundColor: 'white', marginTop: 1 }}>
+      <Stack>
+        <Stack direction={'row'}>
+          <Avatar
+            alt=""
+            src={recruiterdata.image}
+            sx={{ width: 50, height: 50, marginTop: 4, marginLeft: 3 }}
+          />
+          <Typography marginLeft={3} marginTop={7} fontSize={21} fontWeight={500}>
+            {recruiterdata.companyname}
+           
 
-                        </ListItemIcon>
-                        <ListItemText primary="8-10LPA" />
-                    </ListItemButton>
-                    <Stack direction={'row'} marginTop={2} spacing={15} marginLeft={3}>
+          </Typography>
+        </Stack>
+        <Typography marginLeft={3} marginTop={3} fontSize={26} fontWeight={500}>
+        {jobtitle}
+          
 
-                        <Button  startIcon={<PersonIcon/>} onClick={() => navigate('/recruiter/applicants')}>
-                        Applicants
-                        </Button>
-                        <Button variant="contained" sx={{ width: 150, height: 40, borderRadius: 2, backgroundColor: "#3C6FF5", marginRight: 3 }} >Edit</Button>
-                        <Button variant="contained" sx={{ width: 150, height: 40, borderRadius: 2, backgroundColor: "#EA6A6A", marginRight: 3 }} >Unlist</Button>
+        </Typography>
+        <Typography marginLeft={3} marginTop={3} fontSize={16} fontWeight={300} width={"80%"}>
+        {about}
 
+        </Typography>
+        <ListItemButton>
+          <ListItemIcon>
+            <AccountBoxIcon />
+          </ListItemIcon>
+          <ListItemText primary={salary} />
+        </ListItemButton>
+        <Stack direction={'row'} marginTop={2} spacing={15} marginLeft={3} marginBottom={4}>
+          <Button startIcon={<PersonIcon />} onClick={() => navigate('/recruiter/applicants')}>
+            Applicants
+          </Button>
+          <Button variant="contained" sx={{ width: 150, height: 40, borderRadius: 2, backgroundColor: '#3C6FF5', marginRight: 3 }} onClick={() => navigate(`/recruiter/jobedit/${jobid}`)}>
+            Edit
+          </Button>
+          <Button variant="contained" sx={{ width: 150, height: 40, borderRadius: 2, backgroundColor: '#EA6A6A', marginRight: 3 }}>
+            Unlist
+          </Button>
+        </Stack>
+      </Stack>
+    </Box>
+  );
+};
 
-                    </Stack>
-
-                </Stack>
-
-            </Box>
-
-
-
-       
-
-
-    )
-}
-
-export default Dashboard
+export default Dashboard;

@@ -10,26 +10,52 @@ import HomeIcon from '@mui/icons-material/Home';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import { useNavigate } from 'react-router-dom';
+  import { useSelector } from "react-redux";
+
+  type RootState = {
+    user: {
+      value: {
+        id: string | null;
+        name: string | null;
+        email: string | null;
+        image:string|null;
+        access_token: string;
+      };
+    };
+  };
 
 function SideBar() {
   const navigate=useNavigate();
+
+  const userdata = useSelector((state:RootState) => state.user.value);
+  console.log(userdata,"sdsads")
+  
+  
+  
+  
+
   return (
     <Box marginLeft={1} sx={{ width: 300, height: 500, borderRadius: 2, }}>
       <Box  sx={{borderRadius:2,boxShadow:6,width:300,height:'auto',zIndex:1,}}>
         <Stack >
           <Avatar
             alt=""
-            src="/static/images/avatar/1.jpg"
+            src={userdata.image}
             sx={{ width: 80, height: 80,marginTop:-3,mx:'auto'}}
           />
           <Typography textAlign={'center'} marginTop={1} fontSize={16} fontWeight={500}>
-            ARJUN V
+            {userdata.name}
+           
+      
           </Typography>
           <Typography textAlign={'center'} marginTop={1} fontSize={16} fontWeight={300}>
-            arjun.vmaniyara@gmail.com
+            {userdata.email}
+           
+          
           </Typography>
-          <Button variant="contained" sx={{ width: 200, borderRadius: 2, alignContent: 'center', marginLeft: 6, marginTop: 3, backgroundColor: "#3C6FF5" }}onClick={() => navigate('/user/addprofile')} >Complete profile</Button>
-          <Button variant="contained" sx={{ width: 200, borderRadius: 2, alignContent: 'center', marginLeft: 6, marginTop: 3, backgroundColor: "#3C6FF5" }}  onClick={() => navigate('/user/signup')} >Signup</Button>
+          {userdata.name ? ( <Button variant="contained" sx={{ width: 200, borderRadius: 2, alignContent: 'center', marginLeft: 6, marginTop: 3, backgroundColor: "#3C6FF5" }}onClick={() => navigate('/user/addprofile')} >Complete profile</Button>):<Button variant="contained" sx={{ width: 200, borderRadius: 2, alignContent: 'center', marginLeft: 6, marginTop: 3, backgroundColor: "#3C6FF5" }}  onClick={() => navigate('/user/signup')} >Signup</Button>}
+         
+          
           <List>
             <ListItemButton onClick={() => navigate('/')} >
               <ListItemIcon>

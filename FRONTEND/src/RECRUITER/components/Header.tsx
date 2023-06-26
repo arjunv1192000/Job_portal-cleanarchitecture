@@ -99,11 +99,25 @@ function ResponsiveAppBar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+               {pages.map((page) => (
+              <Button
+                key={page}
+                onClick={() => {
+                  let route = '';
+                  if (page === 'HOME') {
+                    route = '/recruiter/dashboard';
+                  } else if (page === ' CREATE JOBS') {
+                    route = '/recruiter/creation';
+                  } else if (page === 'PROFILE') {
+                    route = '/recruiter/profile';
+                  }
+                  navigate(route);
+                }}
+                sx={{ my: 2, color: '#0a0a05', display: 'block' }}
+              >
+                {page}
+              </Button>
+            ))}
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />

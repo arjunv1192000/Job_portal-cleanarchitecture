@@ -1,14 +1,15 @@
 import userprofiledata from "../../../entities/userprofile.js"
 
-const adduserprofile = async (userId, name, email, phone, about, education, language, personalwebsite, location, jobRole, image, cv, repositories) => {
-    console.log("usecase");
+const adduserprofile = async (userId, name, email, phone, about, education, language, personalwebsite, location, jobRole, image, cv, repositories,userdbrepository) => {
+   
 
     try {
         const profiledetails = userprofiledata(userId, name, email, phone, about, education, language, personalwebsite, location, jobRole, image, cv)
 
 
         const userprofile = await repositories.create(profiledetails)
-        console.log(userprofile, "profile data");
+        const userdata=await userdbrepository.profile(userId)
+      
 
         return { status: true,userprofile }
 

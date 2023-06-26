@@ -16,6 +16,8 @@ interface MyFormData {
     experience: string;
     address : string;
     opening:string;
+    enddate:Date;
+    skills:string[];
 }
 
 
@@ -33,5 +35,7 @@ const validationSchema:ObjectSchema<MyFormData> = Yup.object().shape({
     experience: Yup.string().required('Experience is required'),
     address: Yup.string().required('Address is required'),
     opening:Yup.string().required('opening is required'),
+    enddate: Yup.date().required('End Date is required'),
+    skills: Yup.array().required('Skills are required'),
   });
   export default validationSchema;

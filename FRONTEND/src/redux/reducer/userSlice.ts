@@ -9,6 +9,7 @@ type RootState = {
         email: string | null;
         image:string|null;
         access_token: string;
+        profile:boolean |null;
       };
     };
   };
@@ -18,6 +19,7 @@ const intialValue = {value:{id:null,
     email:null,
     access_token:"",
     image:null,
+    profile:null,
     
 }}
 
@@ -35,7 +37,7 @@ export const userSlice=createSlice({
         },
         logout:()=>{
             localStorage.removeItem('access_token_user'),
-            localStorage.removeItem('refresh_token_user')
+            localStorage.removeItem('refresh_token-user')
             return intialValue
             
         }

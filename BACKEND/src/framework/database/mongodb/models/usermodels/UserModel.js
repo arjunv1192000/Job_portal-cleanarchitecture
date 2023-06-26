@@ -19,6 +19,12 @@ const userSchema = new Schema({
     },
     image: {
         type: String
+    },
+    profile:{
+        type:Boolean
+    },
+    isBlock:{
+        type:Boolean
     }
 
 

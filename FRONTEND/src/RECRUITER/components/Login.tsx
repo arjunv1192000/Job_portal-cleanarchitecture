@@ -48,10 +48,10 @@ export default function SignIn() {
                 password: values.password,
 
             };
-            console.log(body);
+            console.log(body,"llllllll");
 
             axios.post("/login", body).then((response) => {
-                console.log(response);
+                console.log(response,"sssss");
 
                 if (response.data.status == true) {
                     localStorage.setItem('access_token_recruiter', response.data.AccessToken)
@@ -61,7 +61,7 @@ export default function SignIn() {
                     navigate("/recruiter/dashboard")
 
                 } else {
-                    toast.error("Invalid email or password")
+                    toast.error(response.data.message)
 
 
                 }

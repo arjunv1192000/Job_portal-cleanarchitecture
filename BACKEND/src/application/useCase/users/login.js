@@ -6,6 +6,11 @@ const login=async (email,password,repositories,authService)=>{
     console.log(isEmail,"login");
    
     if(isEmail.email !=0 && isEmail.password){
+
+        if (isEmail.isBlock==true) {
+
+            return { message: 'User is blocked', status: false };
+          }
         const isPassword=await authService.comparePassword(password,isEmail.password)
         if(isPassword){
           
@@ -13,6 +18,7 @@ const login=async (email,password,repositories,authService)=>{
                 userId:isEmail._id,
                 userName:isEmail.name,
                 userEmail:isEmail.email,
+                userProfile:isEmail.profile,
         
               }
               const AccessToken = await authService.generateAccessToken(isUser);

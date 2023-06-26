@@ -7,14 +7,20 @@ import { Box, Stack } from '@mui/material'
 import Profile from '../components/Profile'
 
 
+
 function Profilepage() {
   return (
   <Box>
     <Stack>
       <Header/>
       <Background/>
-      <Box sx={{ width: "95%", height: 'auto', borderRadius: 6, backgroundColor: 'white', marginLeft: 5, marginTop:40, boxShadow: 6, zIndex: 1 }}>
-        <Profile/>
+      <Box sx={{ width: "60%", height: 'auto', borderRadius: 6, backgroundColor: 'white', marginLeft: 40, marginTop:40, boxShadow: 6, zIndex: 1 }}>
+      
+       
+      <Profile/>
+
+     
+        
 
       </Box>
       <Footer/>

@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 
 type RootState = {
-    user: {
+    recruiter: {
       value: {
         id: string | null;
         companyname:string|null;
@@ -27,7 +27,7 @@ const intialValue = {value:{id:null,
 
 
 export const recruiterSlice=createSlice({
-    name:"user",
+    name:"recruiter",
     initialState:intialValue,
     reducers:{
         login:(state,action)=>{

@@ -1,12 +1,15 @@
 import { Schema, model } from "mongoose";
 import recruiterdata from "./recruiterModels.js";
 import mongoose from "mongoose";
+import userprofile from "../usermodels/userProfileModel.js";
+
+
 
 const recruiterJobSchema = new Schema({
 
     recruiterId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref:'recruiter',
+        ref: 'recruiter',
         require: true
     },
 
@@ -83,7 +86,27 @@ const recruiterJobSchema = new Schema({
         type: String,
         require: true
 
-    }
+    },
+    applicants: { 
+        type: [Schema.Types.ObjectId], 
+       
+    },
+    expiring:{
+        type:Boolean
+    },
+    skills: [{
+        type: String,
+        required: true
+      }],
+      enddate: {
+        type: String,
+        require: true
+
+    },
+
+
+
+
 
 
 })

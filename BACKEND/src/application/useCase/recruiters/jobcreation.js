@@ -1,11 +1,11 @@
 import newjobdata from "../../../entities/jobs.js";
  
-const newjob=async(recruiterId,jobTitle, jobType,jobLevel, jobTiming,about, essentialKnowledge,location, qualification, salary, date, experience,address,opening, repositories)=>{
+const newjob=async(recruiterId,jobTitle, jobType,jobLevel, jobTiming,about, essentialKnowledge,location, qualification, salary, date, experience,address,opening,enddate,skills, repositories)=>{
 
     try {
-        const jobdetails = newjobdata(recruiterId,jobTitle, jobType,jobLevel, jobTiming,about, essentialKnowledge,location, qualification, salary, date, experience,address,opening)
+        const jobdetails = newjobdata(recruiterId,jobTitle, jobType,jobLevel, jobTiming,about, essentialKnowledge,location, qualification, salary, date, experience,address,opening,enddate,skills)
 
-
+          console.log(jobdetails);
         const job = await repositories.createnewjob(jobdetails)
         console.log(job, "jobdata");
 

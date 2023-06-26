@@ -1,4 +1,4 @@
-import { ObjectSchema, AnyPresentValue } from 'yup';
+import { ObjectSchema } from 'yup';
 import * as Yup from 'yup';
 
 interface MyFormData {
@@ -15,7 +15,7 @@ interface MyFormData {
   image: FileList | null;
 }
 
-const validationSchema: ObjectSchema<MyFormData> = Yup.object().shape({
+const validationSchema: ObjectSchema<MyFormData, Yup.AnyObject, any, ''> = Yup.object().shape({
   name: Yup.string()
     .trim()
     .matches(/^[A-Za-z\s]+$/, 'Name cannot contain numbers')
@@ -57,31 +57,11 @@ const validationSchema: ObjectSchema<MyFormData> = Yup.object().shape({
     .required('Location is required'),
 
   cv: Yup.mixed()
-    // .test(
-    //   'fileType',
-    //   'Invalid file type. Only PDFs are allowed',
-    //   function (value: AnyPresentValue) {
-    //     if (value === null) {
-    //       return true;
-    //     }
-    //     const file = value[0] as File;
-    //     return file && file.type === 'application/pdf';
-    //   }
-    // )
+    .nullable()
     .required('CV is required'),
 
   image: Yup.mixed()
-    // .test(
-    //   'fileType',
-    //   'Invalid file type. Only images (JPEG or PNG) are allowed',
-    //   function (value: AnyPresentValue) {
-    //     if (value === null) {
-    //       return true;
-    //     }
-    //     const file = value[0] as File;
-    //     return file && (file.type === 'image/jpeg' || file.type === 'image/png');
-    //   }
-    // )
+    .nullable()
     .required('Image is required'),
 });
 

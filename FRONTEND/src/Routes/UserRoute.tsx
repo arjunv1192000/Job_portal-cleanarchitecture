@@ -1,8 +1,11 @@
 import React from 'react'
 
 import {  Routes, Route, } from 'react-router-dom';
-import { Signup,Login,Jobdetail,Jobs,Myjob,Profile,Addprofile,Landingpage,Savedjobs}from '../USER/pages/index'
+import { Signup,Login,Jobdetail,Jobs,Myjob,Profile,Addprofile,Landingpage,Savedjobs,Updateprofile,Chat}from '../USER/pages/index'
 import { useSelector } from "react-redux";
+import Pagenotfound from '../commonpage/Pagenotfound';
+
+
 
 type RootState = {
   user: {
@@ -24,7 +27,7 @@ function UserRoute() {
 
   return (
     <Routes>
-      
+    
         <Route path='/' element={<Landingpage />} />
          <Route path="signup" element={ <Signup /> } />
          <Route path='login' element={ <Login />} />
@@ -34,6 +37,10 @@ function UserRoute() {
          <Route path='profile' element={userdata.name ?<Profile/>: <Login/>} />
          <Route path='addprofile' element={userdata.name ?<Addprofile/>: <Login/>} />
          <Route path='savedjob' element={userdata.name ?<Savedjobs />: <Login/>} />
+         <Route path='updateprofile' element={userdata.name ?<Updateprofile />: <Login/>} />
+         <Route path='chatpage' element={userdata.name ?<Chat/>: <Login/>} />
+         <Route path='*' element={<Pagenotfound />} />
+        
     </Routes>
    
   );

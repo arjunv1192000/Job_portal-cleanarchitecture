@@ -5,7 +5,7 @@ const getalljobs = async (repositories, page) => {
         const jobdata = await repositories.getalljobs();
         const job = jobdata.jobs;
         const totalCount = jobdata.totalCount;
-        const limit=4
+        const limit=8
         const skipNumber=parseInt((page-1)*limit)
         const paginatedData=(skip,limit)=>{
             const skippedData=job.slice(skip)

@@ -5,6 +5,10 @@ const  jobRepositoryInf=(repository)=>{
     const recruiterjobs=(recruiterId)=>repository.recruiterjobs(recruiterId)
     const singlejob=(jobId)=>repository.singlejob(jobId)
     const Updatejob=(jobdata,jobId)=>repository.Updatejob(jobdata,jobId)
+    const jobApplicants=(jobId)=>repository.jobApplicants(jobId)
+    const changestatus=(jobId)=>repository.changestatus(jobId)
+    
+
     
     
 
@@ -12,7 +16,10 @@ const  jobRepositoryInf=(repository)=>{
         createnewjob,
         recruiterjobs,
         singlejob,
-        Updatejob
+        Updatejob,
+        jobApplicants,
+        changestatus
+  
     }
 
 }

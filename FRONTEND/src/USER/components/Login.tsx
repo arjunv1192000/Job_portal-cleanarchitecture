@@ -15,7 +15,7 @@ import validationSchema from "./validation/Loginvalidation";
 import toast, { Toaster } from 'react-hot-toast';
 import { LoginSocialGoogle } from 'reactjs-social-login';
 import { useDispatch } from "react-redux";
-import {login,logout}from '../../redux/reducer/userSlice.ts'
+import {login}from '../../redux/reducer/userSlice.ts'
 
 
 type googleinfo = {
@@ -61,17 +61,17 @@ export default function SignIn() {
             console.log(body,"ddddddd");
 
             axios.post("/login", body).then((response) => {
-                console.log(response);
+                console.log(response,"qqqqqqqq");
 
                 if (response.data.status == true) {
                     localStorage.setItem('access_token_user', response.data.AccessToken)
                     localStorage.setItem('refresh_token_user', response.data.RefreshToken)
-                    dispatch(login({id:response.data.isUser.userId,name:response.data.isUser.userName,email:response.data.isUser.userEmail,access_token:response.data.AccessToken,refresh_token:response.data.RefreshToken}))
+                    dispatch(login({id:response.data.isUser.userId,name:response.data.isUser.userName,email:response.data.isUser.userEmail,profile:response.data.isUser.userProfile,access_token:response.data.AccessToken,refresh_token:response.data.RefreshToken}))
 
                     navigate("/")
 
                 } else {
-                    toast.error("Invalid email or password")
+                    toast.error(response.data.message)
 
 
                 }
@@ -131,23 +131,23 @@ export default function SignIn() {
                             email: data.email
                         }
                     
-                        console.log(body,"...........................");
+                       
                         
 
 
                         axios.post('/googlelogin', body).then((response) => {
-                            console.log(("data poyiii"));
-
+                            
                             if (response.data.status === true) {
                                 localStorage.setItem('access_token_user', response.data.AccessToken)
                                 localStorage.setItem('refresh_token-user', response.data.RefreshToken)
-                                dispatch(login({id:response.data.isUser.userId,name:response.data.isUser.userName,email:response.data.isUser.userEmail,image: response.data.isUser.userImage,access_token:response.data.AccessToken,refresh_token:response.data.RefreshToken}))
+                                dispatch(login({id:response.data.isUser.userId,name:response.data.isUser.userName,email:response.data.isUser.userEmail,image: response.data.isUser.userImage,profile:response.data.isUser.userProfile,access_token:response.data.AccessToken,refresh_token:response.data.RefreshToken}))
                                
                                 
                               
                                 navigate('/')
                             } else {
-                                toast.error("Invalid email or password")
+                                toast.error(response.data.message)
+                                
                               
 
                               

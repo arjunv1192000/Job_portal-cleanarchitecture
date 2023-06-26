@@ -7,8 +7,23 @@ import ListItemText from '@mui/material/ListItemText';
 import CurrencyRupeeOutlinedIcon from '@mui/icons-material/CurrencyRupeeOutlined';
 import Avatar from '@mui/material/Avatar';
 import { useNavigate } from 'react-router-dom';
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
+import { useEffect, useState } from 'react';
+import axios from '../utils/axios.ts'
+import { useSelector } from "react-redux";
+
+
+type RootState = {
+  user: {
+    value: {
+      id: string | null;
+      name: string | null;
+      email: string | null;
+      image: string | null;
+      access_token: string;
+      profile: boolean | null;
+    };
+  };
+};
 
 type Props = {
   jobId: string;
@@ -20,26 +35,71 @@ type Props = {
   date: string;
   image:string;
   companyname:string;
-  
+  id:string;
 };
 
 
-const Jobpost: React.FC<Props>=({jobId,recruiterId,jobtitle,jobType,location,salary,date,image,companyname})=> {
+const Jobpost: React.FC<Props>=({jobId,id,jobtitle,jobType,location,salary,date,image,companyname})=> {
   const navigate=useNavigate()
+
+  const userdata = useSelector((state: RootState) => state.user.value);
+  console.log(userdata, "profilesetting")
+    const  userId=userdata.id
+    console.log(userId);
+    
+ const[user,setuser]=useState<any>()
+
+  useEffect(() => {
+    const getuser = () => {
+      axios.get('/getuserdata?id=' + userId)
+        .then((response) => {
+          setuser(response.data.userdata)
+          console.log(response.data.userdata);
+          
+        
+          
+
+
+        })
+        .catch((error) => {
+          console.error(error.message);
+        });
+
+    }
+    getuser()
+
+
+  }, [userId]);
+  const currentDate = new Date();
+  const pastDate = new Date(date);
+  let timeAgo;
+  const timeDiff = currentDate.getTime() - pastDate.getTime();
+  
+  if (timeDiff < 24 * 60 * 60 * 1000) {
+   
+    const hoursAgo = Math.floor(timeDiff / (1000 * 3600));
+    timeAgo = hoursAgo + " hours ago";
+  } else {
+    
+    const daysAgo = Math.floor(timeDiff / (1000 * 3600 * 24));
+
+    timeAgo = daysAgo + " days ago";
+    
+  }
+  
+
+
   return (
-    <Box marginLeft={1} sx={{ width: 250  , height:200, borderRadius: 2, boxShadow: 6,backgroundColor:"white",marginBottom:3 }} onClick={() => navigate(`/user/jobdetails/${jobId}`)}>
+    <Box marginLeft={1} sx={{ width: 300 , height:280, borderRadius: 2, boxShadow: 6,backgroundColor:"white",marginBottom:3 }}  onClick={() =>{ user ?.profile ? navigate(`/user/jobdetails/${jobId}`): navigate('/user/addprofile')}  }>
       <Stack >
       <Stack direction={'row'}>
-
-    
-        
           <Avatar
             alt=""
             src={image}
             sx={{ width: 50, height: 50, marginTop:-2, marginLeft: 1.5 }}
           />
 
-          <Typography marginLeft={2} marginTop={2} fontSize={16} fontWeight={500}>
+          <Typography marginLeft={2} marginTop={2} fontSize={16} fontWeight={500} width={100}>
           {companyname}
           </Typography>
           <Typography marginLeft={5} marginTop={2.5} fontSize={12} fontWeight={500}>
@@ -66,7 +126,7 @@ const Jobpost: React.FC<Props>=({jobId,recruiterId,jobtitle,jobType,location,sal
           <ListItemText primary={jobType} />
         </ListItemButton>
         <ListItemButton   >
-          <ListItemText primary={date} />
+          <ListItemText primary={timeAgo} />
         </ListItemButton>
 
         </Stack>

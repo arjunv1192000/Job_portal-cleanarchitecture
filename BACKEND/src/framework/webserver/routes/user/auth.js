@@ -14,6 +14,7 @@ const authRouter=(express)=>{
     router.route('/googlesignup').post(controller.createuserbygoogle)
     router.route('/login').post(controller.userlogin)
     router.route('/googlelogin').post(controller.userloginbygoogle)
+    router.route('/getuserdata').get(controller.getuserdata)
 
     return router;
 

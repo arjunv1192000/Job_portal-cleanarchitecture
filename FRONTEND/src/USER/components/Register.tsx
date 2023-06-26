@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import TextField from '@mui/material/TextField';
@@ -17,8 +16,11 @@ import GoogleIcon from '@mui/icons-material/Google';
 import Divider from '@mui/material/Divider';
 import toast, { Toaster } from 'react-hot-toast';
 import { useDispatch } from "react-redux";
-import {login} from '../../redux/reducer/userSlice'
-
+import { login } from '../../redux/reducer/userSlice'
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { auth } from '../../firebase/firebase.ts';
 
 type googleinfo = {
     provider: string,
@@ -38,8 +40,10 @@ function SignUp() {
 
     const [error, setError] = useState(null)
     const navigate = useNavigate();
-    const dispatch=useDispatch();
+    const dispatch = useDispatch();
+    const [Verified,setVerified]=useState(false)
 
+   
 
 
     const formik = useFormik({
@@ -49,49 +53,90 @@ function SignUp() {
             phone: '',
             password: '',
             confirmPassword: '',
-
         } as FormValues,
         validationSchema: validationSchema,
-        onSubmit: (values) => {
-            console.log(values);
-
-
-
-            const body = {
-                name: values.name,
-                email: values.email,
-                phone: values.phone,
-                password: values.password,
-                confirmPassword: values.confirmPassword,
+        onSubmit: async (values) => {
+            const firebaseConfig = {
+                apiKey: "AIzaSyD7P4fYKyqQQj2tKr1BGZn-rICv_bxQXP4",
+                authDomain: "hire-x-387810.firebaseapp.com",
+                projectId: "hire-x-387810",
+                storageBucket: "hire-x-387810.appspot.com",
+                messagingSenderId: "18104366941",
+                appId: "1:18104366941:web:7abfee3a145dfa267e5ab4",
+                measurementId: "G-JEYG49R1CX"
             };
-            axios.post("/signup", body).then((response) => {
-                if (response.data.status == true) {
-                    localStorage.setItem('access_token_user', response.data.AccessToken)
-                    localStorage.setItem('refresh_token_user', response.data.RefreshToken)
-                    dispatch(login({id:response.data.isUser.userId ,name: response.data.isUser.userName,email: response.data.isUser.userEmail,jwt:response.data.AccessToken}))
 
-                    navigate("/")
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
 
+            try {
+                // Send email verification
+                await sendVerificationEmail(values.email, values.password);
+
+                // Check if the user has verified their email
+               const isVerified=auth.currentUser?.emailVerified
+                 console.log(isVerified,"SHSHDHDHJDJ");
+                 
+                if (isVerified) {
+                    // User email is verified, continue with registration process
+                    const body = {
+                        name: values.name,
+                        email: values.email,
+                        phone: values.phone,
+                        password: values.password,
+                        confirmPassword: values.confirmPassword,
+                    };
+
+                    axios.post("/signup", body).then((response) => {
+                        if (response.data.status === true) {
+                            localStorage.setItem('access_token_user', response.data.AccessToken);
+                            localStorage.setItem('refresh_token_user', response.data.RefreshToken);
+                            dispatch(login({
+                                id: response.data.isUser.userId,
+                                name: response.data.isUser.userName,
+                                email: response.data.isUser.userEmail,
+                                profile: response.data.isUser.userProfile,
+                                jwt: response.data.AccessToken
+                            }));
+
+                            navigate("/");
+                        } else {
+                            toast.error(response.data.message);
+                            setTimeout(() => {
+                                navigate("/user/login");
+                            }, 1500);
+                        }
+                    }).catch((error) => {
+                        console.error(error);
+                        navigate("/login");
+                    });
                 } else {
-                    toast.error(response.data.message)
-                    setTimeout(() => {
-                        navigate("/user/login")
-
-                    }, 1500)
-
+                    // User email is not verified, show an error message or take appropriate action
+                    toast.error('Please verify your email before proceeding with registration.');
                 }
-
-
-            }).catch((response) => {
-                console.error(response.message);
-
-                navigate("/login")
-
-            })
-
+            } catch (error) {
+                console.error('Error sending email verification:', error);
+                toast.error('Failed to send email verification. Please try again later.');
+            }
         },
-
     });
+
+    const sendVerificationEmail = async (email: string, password: string) => {
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            await sendEmailVerification(user);
+            toast.success('Email verification sent. Please check your inbox.');
+
+            return Promise.resolve();
+        } catch (error) {
+            console.error('Error sending email verification:', error);
+            toast.error('Failed to send email verification. Please try again later.');
+            return Promise.reject(error);
+        }
+    };
+
 
     return (
         <Container component="main" maxWidth="md">
@@ -124,26 +169,26 @@ function SignUp() {
 
 
                             console.log(data);
-                            
+
 
 
                             const body = {
                                 name: data.name,
                                 email: data.email,
-                                image:data.picture
+                                image: data.picture
                             }
                             console.log(body);
 
 
                             axios.post('/googlesignup', body).then((response) => {
-                               
+
 
                                 if (response.data.status === true) {
-                                    console.log(response.data,"goooooo");
+                                    console.log(response.data, "goooooo");
                                     localStorage.setItem('access_token_user', response.data.AccessToken)
                                     localStorage.setItem('refresh_token_user', response.data.RefreshToken)
-                                    dispatch(login({id:response.data.isUser.userId ,name: response.data.isUser.userName,email: response.data.isUser.userEmail,image: response.data.isUser.userImage,jwt:response.data.AccessToken}))
-                                    
+                                    dispatch(login({ id: response.data.isUser.userId, name: response.data.isUser.userName, email: response.data.isUser.userEmail, image: response.data.isUser.userImage, profile: response.data.isUser.userProfile, jwt: response.data.AccessToken }))
+
                                     navigate('/')
                                 } else {
                                     toast.error(response.data.message)
@@ -286,3 +331,10 @@ function SignUp() {
 }
 
 export default SignUp;
+
+
+
+
+
+
+

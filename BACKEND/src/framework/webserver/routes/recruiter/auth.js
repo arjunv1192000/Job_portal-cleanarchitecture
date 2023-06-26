@@ -11,6 +11,7 @@ const authRouterRecruiter=(express)=>{
 
     router.route('/signup').post(controller.createRecruiter)
     router.route('/login').post(controller.RecruiterLogin)
+    router.route('/getrecruiterdata').get(controller.getrecruiterdata)
 
    
 

@@ -15,12 +15,6 @@ function Jobview() {
 
           <SideBar />
           <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }} >
-            <Jobposts/>
-            <Jobposts/>
-            <Jobposts/>
-            <Jobposts/>
-            <Jobposts/>
-            <Jobposts/>
             
             
 

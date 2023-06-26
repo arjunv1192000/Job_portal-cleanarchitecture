@@ -1,23 +1,31 @@
 import React from 'react'
-import { Box, Stack, TextField, Button, Grid, Avatar, Typography } from '@mui/material'
+import { Box, Stack, TextField, Button, Grid, Avatar, Typography, FormControl, InputLabel, Select, MenuItem, FormHelperText } from '@mui/material'
 import { useFormik } from 'formik';
 import validationSchema from './validation/Jobcreationvalidation';
 import { useSelector } from "react-redux";
 import axios from '../utils/axios'
 import { useNavigate } from 'react-router-dom';
+import Autocomplete from '@mui/material/Autocomplete';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import Checkbox from '@mui/material/Checkbox';
+
+
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 
 type RootState = {
     recruiter: {
-      value: {
-        id: string | null;
-        companyname:string |null;
-        name: string | null;
-        email: string | null;
-        access_token: string;
-      };
+        value: {
+            id: string | null;
+            companyname: string | null;
+            name: string | null;
+            email: string | null;
+            access_token: string;
+        };
     };
-  };
+};
 
 
 interface MyFormData {
@@ -34,11 +42,13 @@ interface MyFormData {
     experience: string;
     address: string;
     opening: string;
+    skills: string[];
+    enddate: string;
 }
 
 
 function Creationform() {
-    const navigate=useNavigate()
+    const navigate = useNavigate()
 
     const formik = useFormik({
         initialValues: {
@@ -55,6 +65,8 @@ function Creationform() {
             experience: '',
             address: '',
             opening: '',
+            skills: [],
+            enddate: ''
         } as MyFormData,
         validationSchema: validationSchema,
         onSubmit: (values) => {
@@ -77,7 +89,9 @@ function Creationform() {
                 experience: values.experience,
                 address: values.address,
                 opening: values.opening,
-                recruiterId:recruiterdata.id,
+                recruiterId: recruiterdata.id,
+                enddate: values.enddate,
+                skills: values.skills,
 
             }
             console.log(body);
@@ -86,12 +100,12 @@ function Creationform() {
                 console.log(response);
 
                 if (response.data.status == true) {
-                   
+
                     navigate("/recruiter/dashboard")
 
                 } else {
-                   console.log("erooorrororor");
-                   
+                    console.log("erooorrororor");
+
 
                 }
 
@@ -99,17 +113,17 @@ function Creationform() {
             }).catch((response) => {
                 console.error(response.message);
 
-               
+
 
             })
-            
+
 
 
 
         },
 
     });
-    const recruiterdata = useSelector((state:RootState) => state.recruiter.value);
+    const recruiterdata = useSelector((state: RootState) => state.recruiter.value);
 
 
     return (
@@ -129,10 +143,9 @@ function Creationform() {
             <Typography margin={5} fontSize={28} fontWeight={1000}>
                 Create Job
             </Typography>
-            <Box component="form" sx={{ '& .MuiTextField-root': { m: 3, width: '50ch' }, margin: 6,}} noValidate autoComplete="off" onSubmit={formik.handleSubmit} >
+            <Box component="form" sx={{ '& .MuiTextField-root': { m: 3, width: '50ch' }, margin: 6, }} noValidate autoComplete="off" onSubmit={formik.handleSubmit} >
 
                 <div>
-
                     <TextField
                         margin="normal"
                         required
@@ -148,22 +161,27 @@ function Creationform() {
                         helperText={formik.touched.jobTitle && formik.errors.jobTitle}
                         sx={{ width: "60%", }}
                     />
-                    <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="Jobtype"
-                        label="Jobtype"
-                        name="jobType"
-                        autoComplete="Jobtype"
-                        autoFocus
-                        multiline
-                        value={formik.values.jobType}
-                        onChange={formik.handleChange}
-                        error={formik.touched.jobType && Boolean(formik.errors.jobType)}
-                        helperText={formik.touched.jobType && formik.errors.jobType}
-                        maxRows={4}
-                    />
+                    <FormControl fullWidth margin="normal" required error={formik.touched.jobType && Boolean(formik.errors.jobType)} sx={{ width: "41%", marginTop: 3, marginLeft: 3 }}>
+                        <InputLabel id="jobType-label">Job Type</InputLabel>
+                        <Select
+                            labelId="jobType-label"
+                            id="jobType"
+                            name="jobType"
+                            autoComplete="Jobtype"
+                            autoFocus
+                            value={formik.values.jobType}
+                            onChange={formik.handleChange}
+                        >
+                            <MenuItem value="FullTime">FullTime</MenuItem>
+                            <MenuItem value="PartTime">PartTime</MenuItem>
+                            <MenuItem value="Contract">Contract</MenuItem>
+                            <MenuItem value="Intern">Intern</MenuItem>
+
+                        </Select>
+                        {formik.touched.jobType && Boolean(formik.errors.jobType) && (
+                            <FormHelperText>{formik.errors.jobType}</FormHelperText>
+                        )}
+                    </FormControl>
                     <TextField
                         margin="normal"
                         required
@@ -230,7 +248,7 @@ function Creationform() {
                         helperText={formik.touched.essentialKnowledge && formik.errors.essentialKnowledge}
 
                     />
-                    <TextField
+                    {/* <TextField
                         margin="normal"
                         required
                         fullWidth
@@ -244,7 +262,34 @@ function Creationform() {
                         error={formik.touched.location && Boolean(formik.errors.location)}
                         helperText={formik.touched.location && formik.errors.location}
 
-                    />
+                    /> */}
+                    <FormControl fullWidth margin="normal" required error={formik.touched.location && Boolean(formik.errors.location)} sx={{ width: "41%", marginTop: 3, marginLeft: 3,marginRight:3 }}>
+                        <InputLabel id="location-label">Location</InputLabel>
+                        <Select
+                            labelId="location-label"
+                            id="location"
+                            name="location"
+                            autoComplete="Location"
+                            autoFocus
+                            value={formik.values.location}
+                            onChange={formik.handleChange}
+                        >
+                            <MenuItem value="Kochi">Kochi</MenuItem>
+                            <MenuItem value="Bangalore">Bangalore</MenuItem>
+                            <MenuItem value="Kozhikode">Kozhikode</MenuItem>
+                            <MenuItem value="Trivandrum">Trivandrum</MenuItem>
+                            <MenuItem value="Kolkata">Kolkata</MenuItem>
+                            <MenuItem value="Gurgaon">Gurgaon</MenuItem>
+                            <MenuItem value="Delhi">Delhi</MenuItem>
+                            <MenuItem value="Mumbai">Mumbai</MenuItem>
+                            <MenuItem value="Gujarat">Gujarat</MenuItem>
+                            <MenuItem value="Goa">Goa</MenuItem>
+                        </Select>
+                        {formik.touched.location && Boolean(formik.errors.location) && (
+                            <FormHelperText>{formik.errors.location}</FormHelperText>
+                        )}
+                    </FormControl>
+
 
 
 
@@ -261,6 +306,7 @@ function Creationform() {
                         onChange={formik.handleChange}
                         error={formik.touched.qualification && Boolean(formik.errors.qualification)}
                         helperText={formik.touched.qualification && formik.errors.qualification}
+
 
                     />
                     <TextField
@@ -292,6 +338,22 @@ function Creationform() {
                         onChange={formik.handleChange}
                         error={formik.touched.date && Boolean(formik.errors.date)}
                         helperText={formik.touched.date && formik.errors.date}
+
+                    />
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="enddate"
+                        label="End date"
+                        name='enddate'
+                        autoComplete=""
+                        type='date'
+                        autoFocus
+                        value={formik.values.enddate}
+                        onChange={formik.handleChange}
+                        error={formik.touched.enddate && Boolean(formik.errors.enddate)}
+                        helperText={formik.touched.enddate && formik.errors.enddate}
 
                     />
                     <TextField
@@ -339,6 +401,50 @@ function Creationform() {
                         helperText={formik.touched.opening && formik.errors.opening}
 
                     />
+                    <Autocomplete
+                        multiple
+                        id="skills"
+                        options={[
+                            'JavaScript',
+                            'React',
+                            'Node.js',
+                            'HTML',
+                            'CSS',
+                            'Python',
+                        ]}
+                        disableCloseOnSelect
+                        getOptionLabel={(option) => option}
+                        value={formik.values.skills}
+                        onChange={(event, value) => formik.setFieldValue('skills', value)}
+                        renderOption={(props, option, { selected }) => (
+                            <li {...props}>
+                                <Checkbox
+                                    icon={icon}
+                                    checkedIcon={checkedIcon}
+                                    checked={selected}
+                                />
+                                {option}
+                            </li>
+                        )}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                margin="normal"
+                                fullWidth
+                                id="skills"
+                                label="Skills"
+                                name="skills"
+                                autoComplete="skills"
+                                autoFocus
+                                value={formik.values.skills}
+                                onChange={(event) => formik.setFieldValue('skills', event.target.value)}
+                                error={formik.touched.skills && Boolean(formik.errors.skills)}
+                                helperText={formik.touched.skills && formik.errors.skills}
+                            />
+                        )}
+                    />
+
+
 
                 </div>
                 <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2, height: 60, width: "60%", backgroundColor: '#131392', ml: 20 }} >

@@ -1,5 +1,5 @@
 
-const newjobdata=(recruiterId,jobTitle, jobType,jobLevel, jobTiming,about, essentialKnowledge,location, qualification, salary, date, experience,address,opening)=>{
+const newjobdata=(recruiterId,jobTitle, jobType,jobLevel, jobTiming,about, essentialKnowledge,location, qualification, salary, date, experience,address,opening,enddate,skills)=>{
     return{
         getrecruiterid:()=>recruiterId,
         getjobTitle:()=>jobTitle,
@@ -15,6 +15,8 @@ const newjobdata=(recruiterId,jobTitle, jobType,jobLevel, jobTiming,about, essen
         getexperience:()=>experience,
         getaddress:()=>address,
         getopening:()=>opening,
+        getenddate:()=>enddate,
+        getskills:()=>skills,
     }
 
 

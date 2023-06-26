@@ -5,6 +5,9 @@ import SchoolIcon from '@mui/icons-material/School';
 import { useSelector } from "react-redux";
 import { useEffect, useState } from 'react';
 import axios from '../utils/axios.ts'
+import { useNavigate } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 type RootState = {
     user: {
         value: {
@@ -21,8 +24,11 @@ type RootState = {
 
 
 function Profile() {
+    const navigate = useNavigate()
     const user = useSelector((state: RootState) => state.user.value);
     const [profile, setprofile] = useState<any>(null);
+    const theme = useTheme();
+    const isMobile: boolean = useMediaQuery(theme.breakpoints.down('sm'));
 
     const id = user.id
 
@@ -42,12 +48,10 @@ function Profile() {
 
     }, [id])
 
-
-
     return (
         <Box
 
-            sx={{ width: "70%", height: 1000, borderRadius: 2, margin: 3, }}>
+            sx={{ width: "70%", height: 1000, borderRadius: 2,marginLeft:isMobile?15:0 }}>
             <Stack>
                 <Stack direction={'row'}>
                     <Box
@@ -118,7 +122,7 @@ function Profile() {
                     <Typography variant="body1">Personal website:</Typography>
                     <Typography variant="body1">wwww.sdsdsd.com</Typography>
                 </Stack> */}
-                <Button variant="contained" sx={{ width: 200, height: 40, borderRadius: 2, marginTop: 5, backgroundColor: "#3C6FF5", marginLeft: 4 }} >Update Profile</Button>
+                <Button variant="contained" sx={{ width: 200, height: 40, borderRadius: 2, marginTop: 5, backgroundColor: "#3C6FF5", marginLeft: 4 }} onClick={() => navigate('/user/updateprofile')}>Update Profile</Button>
 
             </Stack>
 

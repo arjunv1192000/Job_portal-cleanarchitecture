@@ -2,6 +2,7 @@ import register from "../../../application/useCase/users/register.js"
 import googleregister from "../../../application/useCase/users/googleregister.js"
 import login from "../../../application/useCase/users/login.js"
 import googlelogin from "../../../application/useCase/users/googlelogin.js"
+import Getuser from "../../../application/useCase/users/getuserdata.js"
 
 
  const authController=(userAuthRepositoryInt,userAuthRepositoryImp,authServiceInterface,authServiceImp)=>{
@@ -46,6 +47,18 @@ import googlelogin from "../../../application/useCase/users/googlelogin.js"
             }).catch((err)=>console.log(err))
 
         }
+        const getuserdata=(req,res)=>{
+
+            const userId = req.query.id;
+           
+        
+            Getuser(userId,dbrepository).then((response)=>{
+                console.log(response);
+                res.json(response)
+        
+            }).catch((err)=>console.log(err))
+        
+         }
        
 
 
@@ -55,7 +68,8 @@ import googlelogin from "../../../application/useCase/users/googlelogin.js"
             createuser,
             createuserbygoogle,
             userlogin,
-            userloginbygoogle
+            userloginbygoogle,
+            getuserdata
         }
     }
 

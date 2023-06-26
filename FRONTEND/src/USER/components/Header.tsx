@@ -15,7 +15,9 @@ import AdbIcon from '@mui/icons-material/Adb';
 import { useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from "react-redux";
-import {logout} from '../../redux/reducer/userSlice'
+import { logout } from '../../redux/reducer/userSlice'
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 type RootState = {
   user: {
@@ -23,7 +25,7 @@ type RootState = {
       id: string | null;
       name: string | null;
       email: string | null;
-      image: string |null;
+      image: string | null;
       access_token: string;
     };
   };
@@ -33,11 +35,14 @@ type RootState = {
 
 
 function ResponsiveAppBar() {
+  const theme = useTheme();
+  const isMobile: boolean = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const userdata = useSelector((state:RootState) => state.user.value);
+  const userdata = useSelector((state: RootState) => state.user.value);
+ 
   const pages = ['HOME', 'JOBS', 'PROFILE'];
-  const settings = userdata.id ? ['Profile', 'Logout'] : ['Login', 'Profile', 'Logout'];
+  const settings = userdata.id ? [userdata.name,'Profile', 'Logout'] : ['Login'];
 
 
 
@@ -51,22 +56,22 @@ function ResponsiveAppBar() {
     setAnchorElUser(event.currentTarget);
   };
 
- 
-  
-  
+
+
+
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
   const handleCloseUserMenu = () => {
-    dispatch(logout()); 
-    navigate('/'); 
+    dispatch(logout());
+    navigate('/user/login');
   };
-  
-  
+
+
 
 
   return (
-    <AppBar position="fixed" sx={{ marginTop: 3, backgroundColor: 'white', width: "90%", marginRight: 10, borderRadius: 3 }} >
+    <AppBar position="fixed" sx={{ marginTop: 3, backgroundColor: 'white', width: "90%", marginRight:isMobile?5: 10, borderRadius: 3 }} >
       <Container maxWidth="xl" >
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -147,7 +152,17 @@ function ResponsiveAppBar() {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={() => {
+                  let route = '';
+                  if (page === 'HOME') {
+                    route = '/';
+                  } else if (page === 'JOBS') {
+                    route = '/user/jobs';
+                  } else if (page === 'PROFILE') {
+                    route = '/user/profile';
+                  }
+                  navigate(route);
+                }}
                 sx={{ my: 2, color: '#0a0a05', display: 'block' }}
               >
                 {page}
@@ -158,7 +173,7 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={userdata.image ? '' : undefined}  src={userdata.image} />
+                <Avatar alt={userdata.image ? '' : undefined} src={userdata.image} />
               </IconButton>
             </Tooltip>
             <Menu

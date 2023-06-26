@@ -1,52 +1,118 @@
 import React from 'react'
-import { Box, Stack, TextField, Button, Grid, Avatar, Typography } from '@mui/material'
-import ListItemText from '@mui/material/ListItemText';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import { Box, Stack, TextField, Button, Grid, Avatar, Typography, MenuItem,Select } from '@mui/material'
 import PersonIcon from '@mui/icons-material/Person';
+import axios from '../utils/axios'
+import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import { SelectChangeEvent } from '@mui/material/Select';
+type Props = {
+    userId: string;
+    name: string;
+    email: string;
+    phone: string;
+    location: string;
+    jobRole: string;
+    language: string;
+    about: string;
+    education: string;
+    image: string;
+    cv: string;
+    jobId:string;
+   
+};
 
-function Applicant() {
+const Applicant: React.FC<Props> = ({ userId, name, email, phone, location, jobRole, language, about, education, image, cv,jobId }) => {
+    const navigate = useNavigate();
+
+   
+    const [status, setStatus] = React.useState('Pending');
+
+    const handleDownloadCv = () => {
+        window.open(cv, '_blank');
+    };
+    const handleStatusChange = (event: SelectChangeEvent<string>) => {
+        const newStatus=(event.target.value );
+        setStatus(newStatus);
+        axios.post('/jobs/updateApplicantStatus', {
+            userId: userId, 
+            jobId:jobId,
+            status: newStatus 
+          })
+            .then(response => {
+              console.log('Status updated successfully:', response.data);
+              if(response.data.status== true){
+                toast.success('Application'+newStatus +'Successfully')
+              }
+              
+            })
+            .catch(error => {
+              console.error('Error updating status:', error);
+              
+            });
+
+      };
+    
+
     return (
-        <Box sx={{ width: "90%", height: 350, borderRadius: 2, boxShadow: 6, backgroundColor: 'white',marginTop:1 }}>
+        <Box sx={{ width: "90%", height: 350, borderRadius: 2, boxShadow: 6, backgroundColor: 'white', marginTop: 1 }}>
             <Stack direction={'row'} spacing={4}>
                 <Avatar
                     alt=""
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3C2p4F7n9zvRLQufC2NGXHHgT9v5sKFtNTUA6odQ&s"
+                    src={image}
                     sx={{ width: 50, height: 50, marginTop: 5, marginLeft: 3 }}
                 />
                 <Stack >
-                <Typography marginLeft={3} marginTop={5} fontSize={21} fontWeight={500}>
-                      ARJUN V
+                    <Typography marginLeft={3} marginTop={5} fontSize={21} fontWeight={500}>
+                        {name}
                     </Typography>
-                    <Typography marginLeft={3}  fontSize={18} fontWeight={300} marginTop={2}>
-                    Fullstack developer
+                    <Typography marginLeft={3} fontSize={18} fontWeight={300} marginTop={2}>
+                        {jobRole}
                     </Typography>
-                    <Typography marginLeft={3}  fontSize={18} fontWeight={300}  marginTop={2}>
-                    arjun.vmaniyara@gmail.com
+                    <Typography marginLeft={3} fontSize={18} fontWeight={300} marginTop={2}>
+                        {email}
                     </Typography>
-                    <Typography marginLeft={3}  fontSize={18} fontWeight={300}  marginTop={2}>
-                    9745662340
+                    <Typography marginLeft={3} fontSize={18} fontWeight={300} marginTop={2}>
+                        {phone}
+                    </Typography>
+                    <Typography marginLeft={3} fontSize={18} fontWeight={300} marginTop={2}>
+                        {location}
                     </Typography>
 
-                    <Button   sx={{width:200,marginTop:7}}  startIcon={<PersonIcon/>} >
+                    <Button sx={{ width: 200, marginTop: 4 }} startIcon={<PersonIcon />} onClick={handleDownloadCv} >
                         Download CV
-                        </Button>
+                    </Button>
 
                 </Stack>
                 <Stack marginLeft={1}>
-                <Typography marginLeft={3} marginTop={5} fontSize={21} fontWeight={500}>
-                       About Me
+                    <Typography marginLeft={3} marginTop={5} fontSize={21} fontWeight={500}>
+                        About Me
                     </Typography>
-                    <Typography marginLeft={3}  fontSize={18} fontWeight={300}  marginTop={2} width={400}>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae architecto eveniet, dolor quo repellendus pariatur
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae architecto eveniet, dolor quo repellendus pariatur
+                    <Typography marginLeft={3} fontSize={18} fontWeight={300} marginTop={2} width={400}>
+                        {about}
                     </Typography>
-                    <Button variant="contained" sx={{ width: 200, height: 40, borderRadius: 2, backgroundColor: "#3C6FF5",margin:4 }} >Chat With Applicant</Button>
+                    
+                    <Button variant="contained" sx={{ width: 200, height: 40, borderRadius: 2, backgroundColor: "#3C6FF5",marginTop:19}} onClick={() =>navigate('/recruiter/chatpage')} >Chat With Applicant</Button>
 
                 </Stack>
+                <Stack marginLeft={1}>
+                    <Typography marginLeft={3} marginTop={5} fontSize={18} fontWeight={500}>
+                        Change Status
+                    </Typography>
+                    <Select value={status} onChange={handleStatusChange} sx={{ marginLeft: 3, marginTop: 2,width:180,height:40 }}>
+                        <MenuItem value="Approved">Approved</MenuItem>
+                        <MenuItem value="Rejected">Rejected</MenuItem>
+                    </Select>
+                </Stack>
+                <Typography marginLeft={3} marginTop={5} fontSize={21} fontWeight={500}>
+                    
+                    </Typography>
 
             </Stack>
+            <Toaster    
+                position="top-center"
+                reverseOrder={false}
+            />
+
 
         </Box>
 

@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import axios from '../utils/axios.ts'
 import { useDispatch } from "react-redux";
-import { addprofile } from '../../redux/reducer/userProfileSlice.ts';
+
 
 
 type RootState = {
@@ -46,6 +46,8 @@ function Profileform() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userdata = useSelector((state: RootState) => state.user.value);
+  console.log(userdata,"profile");
+  
 
 
   const formik = useFormik({
@@ -130,21 +132,6 @@ function Profileform() {
     console.log(response);
 
     if (response.data.status === true) {
-      dispatch(
-        addprofile({
-          id: response.data.userprofile.userId,
-          name: response.data.userprofile.name,
-          email: response.data.userprofile.email,
-          phone: response.data.userprofile.phone,
-          about: response.data.userprofile.about,
-          education: response.data.userprofile.education,
-          language: response.data.userprofile.language,
-          location: response.data.userprofile.location,
-          jobrole: response.data.userprofile.jobRole,
-          image: response.data.userprofile.image,
-          cv: response.data.userprofile.cv,
-        })
-      );
       
 
       navigate("/user/profile")
@@ -181,7 +168,7 @@ function Profileform() {
       }}
     >
       <Typography margin={5} fontSize={28} fontWeight={1000}>
-        Update your profile
+        Create your profile
       </Typography>
       <Box
         component="form"
@@ -375,7 +362,7 @@ function Profileform() {
             variant="contained"
             sx={{ mt: 3, mb: 2, height: 60, width: '60%', backgroundColor: '#131392', ml: 20 }}
           >
-            Submit & Register
+            Submit 
           </Button>
         </div>
       </Box>

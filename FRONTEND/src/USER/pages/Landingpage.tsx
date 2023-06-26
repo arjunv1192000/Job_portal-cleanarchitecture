@@ -2,26 +2,33 @@ import React from 'react'
 import { Box, Stack, Grid, Typography } from '@mui/material'
 import Header from '../components/Header';
 import SideBar from '../components/SideBar';
-import Rightbar from '../components/Rightbar';
 import Jobpost from '../components/Jobpost';
 import Footer from '../components/Footer'
 import Background from '../components/Background';
 import { useEffect, useState } from 'react';
 import axios from '../utils/axios.ts'
 import Pagination from '@mui/material/Pagination';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+
 
 
 type jobs = {
     _id: string;
-    recruiterId: string;
+    id:string;
     jobTitle: string;
     jobType: string;
     location: string;
     salary: string;
     date: string;
     opening: string;
-    image: string;
-    companyname: string;
+    recruiterId: {
+        image: string;
+        companyname: string;
+        recruiterId: string;
+        _id: string;
+    
+      }
 
 };
 
@@ -51,6 +58,9 @@ function Landingpage() {
 
     }, [currentPage]);
 
+    const theme = useTheme();
+    const isMobile: boolean = useMediaQuery(theme.breakpoints.down('sm'));
+
     const handlePageChange = (event: any, page: React.SetStateAction<number>) => {
         setCurrentPage(page);
     };
@@ -63,19 +73,18 @@ function Landingpage() {
             <Stack>
                 <Header />
                 <Background />
-                <Box sx={{ width: "95%", height: 'auto', borderRadius: 6, backgroundColor: 'white', marginLeft: 5, marginTop: 40, boxShadow: 6, zIndex: 1 }}>
+                <Box sx={{ width: "95%", height: 'auto', borderRadius: 6, backgroundColor: 'white', marginLeft: 5, marginTop: 40, boxShadow: 6, zIndex: 1, '@media (max-width: 800px)': {
+          width:800, marginTop:30,marginLeft:2
+        }, }}>
                     <Stack>
-                        <Typography marginTop={6} fontSize={24} fontWeight={500} textAlign={'center'}>
-                            Browse by category
-                        </Typography>
-                        <Rightbar />
+                       
 
-                        <Stack direction={'row'} sx={{ marginTop: 10, marginLeft: 3 }} spacing={1}>
+                        <Stack direction={isMobile ? 'column' : 'row'} sx={{ marginTop: 10, marginLeft:isMobile ? 3 : 3 }} spacing={1}>
 
                             <SideBar />
-                            <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ padding: 1, }} >
+                            <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ padding: 1,marginLeft:100 }} >
                                 {alljobs.map((job) => (
-                                    <Jobpost recruiterId={job.recruiterId} jobtitle={job.jobTitle} jobType={job.jobType} location={job.location} date={job.date} salary={job.salary} jobId={job._id} image={job.recruiterId.image} companyname={job.recruiterId.companyname} />
+                                    <Jobpost id={job.recruiterId} jobtitle={job.jobTitle} jobType={job.jobType} location={job.location} date={job.date} salary={job.salary} jobId={job._id} image={job.recruiterId.image} companyname={job.recruiterId.companyname} />
                                 ))}
 
 
